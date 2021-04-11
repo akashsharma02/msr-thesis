@@ -1,0 +1,187 @@
+\chapter{Object SLAM} \label{chap:object-slam}
+\section{Method} \label{sec: methodology}
+Our pipeline can be divided into typical SLAM components and a deep perception module, connected by an object-based semantic map. Figure~\ref{fig:overview} provides an overview.
+
+%
+It consists of 5 modules each running in a separate thread: semantic segmentation, frame-to-model odometry, object data association and map update, PGO, and compositional rendering.
+%
+Incoming \textit{RGB-D} frames are initially processed through  \textit{semantic segmentation} (\S\ref{subsec: segmentation})  to obtain instance masks, labels, and semantic descriptors, from DNNs for keyframes.
+%
+Then, odometry between the incoming live frame and the \textit{compositional render} from the map (\S\ref{subsec: rendering}) is estimated via \textit{frame-to-model odometry} (\S\ref{subsec: tracking}) to obtain relative poses.
+%
+Maintained objects visible in the frame are rendered given the estimated camera pose, and objects are associated with 2D instance detections to either integrate or initialize new objects in the global map (\S\ref{subsec: segmentation}).
+%
+Separately, a global factor-graph is updated to optimize the camera trajectory and object poses (\S\ref{subsec: optimization}). The optimized object poses are rendered to generate a compositional model of the scene for subsequent tracking (\S\ref{subsec: rendering}).
+
+Before we discuss these modules in detail from \S\ref{subsec: tracking} to \S\ref{subsec: rendering}, we introduce core concepts and notations in \S\ref{subsec: notation}.
+%ucted via volumetric fusion of \textit{masked} pixels. In particular, 2D instance masks are generated on the fly using an off-the-shelf object detector methods such as \textit{PointRend} \cite{kirillov2019pointrend} or \textit{Mask-RCNN} \cite{he2017mask}. Our map representation then is a \textit{pose-graph} of these object volumes. This representation allows us to optimize the individual object poses without needing to de-integrate or deform \cite{whelan2015elasticfusion} the persistent map as typically required for dense SLAM solutions, and allows us to track large environments with relatively low memory consumption, as objects are generally sparsely distributed.
+
+% Typically, both Feature based SLAM and Dense SLAM methods use nearest neighbor (NN), or Joint Compatibility Branch and Bound (JCBB) \cite{kaess2009covariance} to tackle the problem of data association, between adjacent input frames, and use handcrafted Bag of Words \cite{GalvezTRO12} for relocalization. However, with the object map representation, we have the opportunity to use semantic information to augment data association. In this paper, we present a simple data association method, that uses both geometric consistency and semantic consistency.
+
+% We use the \textit{KinectFusion} \cite{kinectfusion} approach of Frame to Model alignment for local tracking. Further, we utilize a 2.5D compositional layered render of the model to reconstruct objects with high fidelity, optimize its poses and obtain camera egomotion simultaneously. We also instantiate a low resolution background TSDF volume to supplement local tracking and handle \textit{object-less} regions of the environment similar to \cite{mccormac_fusion_2018}.
+
+% Figure~\ref{fig:objectandscene} visualizes an example reconstruction of a typically large scene
+%\subsection{System Overview}
+
+% Our Object SLAM architecture is typical of a dense SLAM system \cite{kinectfusion}, and borrows from state of the art systems as \cite{dong2019gpu} and \citationneeded \todo{Infinitam?}. Figure~\ref{fig:overview} shows an overview of the full system.
+
+
+
+\subsection{Core concepts and notations} \label{subsec: notation}
+A background volume $V_B$ is a spatially-hashed voxel grid on GPU, where small $16^3$ subvolumes are allocated around observed 3D points. It is created and updated as a \textit{temporary} instance for stable tracking. An object volume $V_{O_i}$ is akin to the background volume, but persistently maintains the object label, ID, and corresponding object descriptors.
+
+A 3D volume $V$'s properties, including surface vertex positions, normals, and colors, can be mapped to 2D images given a camera pose $\mathbf{T} \in SE(3)$ and camera intrinsics defined as $K$ with ray-casting. We denote such \textit{rendered images} by \( \langle \mathcal{N}, \mathcal{V}, \mathcal{C} \rangle \)  for normal, vertex, and color maps respectively. They can be associated with \textit{input RGB-D images} $\langle \mathcal{I}, \mathcal{D}\rangle $ that consist of color ($\mathcal{I}$) and depth ($\mathcal{D}$) images via projective closest points.
+
+We use subscripts and superscripts to indicate multiple coordinate frames used in our pipeline, including $C_i$ for $i$th camera, $O_j$ for $j$th object, and $W$ for background or world coordinate frame. For instance,
+\(\langle \mathcal{N}_{C_s}, \mathcal{V}_{C_s}, \mathcal{C}_{C_s} \rangle \) represents 2D maps rendered from the volumes in the $C_s$ camera coordinate frame.
+$\mathbf{T}_{O_j}^W \in SE(3)$ encodes a rigid transformation from object $j$ to world. Finally, we denote the respective measurements between nodes with variable $\mathbf{Z}$.
+
+%denote the normal map and vertex map estimated at frame \( \undervec{\mathcal{F}}_{C_i} \) respectively. The pose of the camera capturing the frame, denoted as $\mathbf{T}_{W C_i} \in SE(3)$ denotes a transformation from $i$th camera frame $\undervec{\mathcal{F}}_{C_i}$ to the world frame $\undervec{\mathcal{F}}_W$.
+
+%Similarly, a TSDF object volume at pose \(\mathbf{T}_{WO}\) denotes a transformation from the object frame $\undervec{\mathcal{F}}_{O}$ to the world frame $\undervec{\mathcal{F}}_{W}$. A point in a frame $\undervec{\mathcal{F}}_{W}$ is denoted as $p_W$, and where appropriate a point in homogeneous coordinate space is denoted as $\dot{p}_{W} = [p_W^\top, 1]^\top$
+
+
+\subsection{Hybrid frame-to-model odometry} \label{subsec: tracking}
+
+In \textit{RGB-D} camera tracking, we seek to estimate the relative camera pose \(\mathbf{T}^{C_t}_{C_s}\) given an incoming \textit{RGB-D} target frame \( \langle \mathcal{I}_{C_t}, \mathcal{D}_{C_t}\rangle \) and a source model \( \langle \mathcal{N}_{C_{s}}, \mathcal{V}_{C_{s}}, \mathcal{C}_{C_{s}}\rangle \) of the scene rendered by placing a virtual camera at the previous camera frame ${C_s}$.
+
+We accomplish this by minimizing the joint weighted dense geometric error residual $r_D$ and the photometric error residual $r_I$. The general energy function is formulated as in \cite{park_colored_2017} by accumulating residual at every point $p \in \mathbb{R}^2$ with a valid data association:
+\begin{multline}
+    E(\mathbf{T}^{C_t}_{C_{s}}) = \sum_{p} (1 - \sigma) r_I^2(\mathbf{T}^{C_t}_{C_s}, p)
+    + \sigma r_D^2(\mathbf{T}^{C_t}_{C_s}, p), \label{eq:1}
+\end{multline}
+Here, we adapt the geometric ICP residual as the point-to-plane distance between the incoming depth map $\mathcal{D}$ and the rendered vertex and normal map $(\mathcal{V}_{C_s}, \mathcal{N}_{C_s})$ as follows, using the formulation in \cite{kinectfusion}:
+\begin{align}
+    r_D(T^{C_t}_{C_s}, p) = \bigg((T^{C_t}_{C_{s}} \mathcal{V}_{C_s}( \hat{p} ) - \mathcal{V}_{C_{t}}(p )\bigg) \cdot \mathcal{N}_{C_{t}}( p ), \label{eq:2}
+\end{align}
+where $\mathcal{V}_{C_t}$ is the vertex map from unprojecting the input depth image $\mathcal{D}_{C_t}$.
+Additionally, we use a photometric error residual to improve tracking robustness, which is defined as:
+\begin{align}
+    r_I(T^{C_t}_{C_s}, p) = \mathcal{C}_{C_s}(\hat{p}) - \mathcal{I}_{C_t}(p). \label{eq:3}
+\end{align}
+In equations (\ref{eq:2}) and (\ref{eq:3}), $\hat{p}$ is the correspondence of $p$ in the source frame, and is computed via \textit{warping}:
+\begin{align}
+    \hat{p} = K {\mathbf{T}^{C_t}_{C_s}}^{-1}\mathcal{D}_{C_t}(p)K^{-1}[p^\top, 1]^\top. \label{eq:4}
+\end{align}
+It must be noted that the $p$s are a subset of pixels with valid object-level data associations detailed in \S\ref{subsec: rendering}.
+
+The energy function in equation \ref{eq:1} is minimized using the Gauss-Newton algorithm. We implement the minimization in a coarse to fine scheme using an image pyramid, on the GPU in parallel since each pixel acts independently in the energy function using \textit{reduction} with appropriate thread conflict handling as described in \cite{dong2019gpu}.
+
+
+\begin{figure}[t!]
+    \centering
+    \subfloat{\includegraphics[width=0.5\linewidth]{figures/frame-000218.color.png}}
+    \subfloat{\includegraphics[width=0.5\linewidth]{figures/scene13-objectsonly.png}}
+    \caption{Qualitative foreground object reconstruction results on \emph{RGB-D Scene 13} sequence.}
+    \vspace*{-1em}
+    \label{fig:rgbd_scene13}
+\end{figure}
+
+\begin{figure*}[t!]
+    \centering
+    \subfloat{\includegraphics[align=c,width=0.3\linewidth]{figures/frame-000293.color.png}}
+    \subfloat{\includegraphics[align=c,width=0.3\linewidth]{figures/mask-fusion-scene12.png}}
+    \subfloat{\includegraphics[align=c,width=0.26\linewidth]{figures/scene12.png}}
+    %\includegraphics[width=0.6\linewidth]{figures/mask-fusion-scene12.png}
+    %\includegraphics[width=0.6\linewidth]{figures/scene12.png}
+    \vspace{-2mm}
+    \caption{Reconstructed small indoor scene \emph{RGB-D Scene 12}. We first show an example input \textit{RGB} frame followed by a top-down view of the reconstruction from \textit{MaskFusion}. This is followed by result from our pipeline. Note that in our reconstruction background walls and floor are filtered out. }
+    \vspace*{-1em}
+    \label{fig:rgbd_scene12}
+\end{figure*}
+
+
+\subsection{Object instance segmentation and association} \label{subsec: segmentation}
+
+\textbf{2D instance segmentation:} Object detection and instance masks are generated every $n^{th}$ frame (we choose $n=10$) in a separate thread from the \textit{PointRend} backend. \textit{PointRend} uses a Resnet-50-FPN backbone network to generate a convolutional feature map. In particular, after an empirical evaluation, we found that \textit{PointRend} provided better masks over \textit{Mask-RCNN}.
+
+The semantic segmentation module maps incoming \textit{RGB} frame \(\mathcal{I}\) into a set of object labels $[l_1, \dots l_k]$, a set of binary object masks $M_n^i$ defined over $l \in \mathcal{L} \triangleq \{0, \dots, L_{max}-1\}$ object classes ($L_{max}=80$ in the MS-COCO dataset), bounding boxes $b \in \mathbb{N}^4$, and a probability distribution $p(l_i \mid \mathcal{I})$. We also extract the object feature map for the accepted object proposals, from the penultimate fully connected layer of the R-CNN from the object classifier head. We observe that these feature maps provide us with robust data association in ambiguous situations.
+%
+To obtain instance segmentation for frames not sent to the DNN, we warp the binary mask images from the most recent frame with a segmentation and fill the holes in the warped masks using the \textit{flood fill} algorithm.
+
+Once the current camera pose and the semantic segmentation information are available, instance detections are associated with existing objects. Unmatched instance detections are used to initialize new object volumes.
+
+\textbf{3D instance generation:} When an unmatched object is to be instantiated, the masked depth frame at $C_i$ is unprojected and transformed into the world frame to obtain the object point cloud:
+\begin{align}
+X_{W} = \mathbf{T}^W_{C_i} K^{-1} D_{C_i}(p) [p^\top, 1]^\top.
+\end{align}
+To obtain relatively high fidelity reconstruction, we adaptively calculate a conservative voxel length of
+\begin{align}
+    l = \gamma \| \max(X_W) - \min(X_W) \|_{\infty},
+\end{align}
+where $\min, \max$ operators are applied to all dimensions of $X \in \mathbb{R}^3$ simultaneously. We empirically use $\gamma = 1 / 64\sqrt{2}$, but due to the scalability of the volume our model is less sensitive to $\gamma$.
+Finally, the object pose is simply chained by
+\begin{align}
+    \mathbf{T}_{O}^W = \mathbf{T}_{C_i}^{W} \bigg({\mathbf{T}_{C_i}^O}\bigg)^{-1},
+\end{align}
+where $\mathbf{T}_{C_i}^O = [I \mid t_{C_i}^O]$ with $t_{C_i}^O = \min(X_W) - t_{C_i}^W $. Each new object is also initialized with the object feature map from its corresponding instance mask.
+
+\textbf{2D--3D semantic data association:}
+To associate existing object volumes to 2D instances, visible objects are rendered (in \S\ref{subsec: rendering}) in the current frame. The rendered color map $\mathcal{C}$ is thresholded to obtain a virtual binary mask. An intersection over union (IoU) between the virtual binary mask $\hat{\mathcal{M}}$ and the instance masks $\mathcal{M}_i$ in the current frame is used as a scoring metric as defined in \cite{fusionPP}.
+
+As opposed to computing the $\argmax_{i}{\text{IoU}(\mathcal{M}_i, \hat{\mathcal{M})}}$, we associate objects as given below:
+\begin{align}
+    i = \argmin_{i \in \mathcal{S}} (\| f_i - \hat{f} \|_1),
+\end{align}
+where $\hat{f}$ and $f_i$ denote feature map of the object render (identical to the object in question), and the instance masks respectively and $\mathcal{S} \triangleq \{i : \text{IoU}(\mathcal{M}_i, \hat{M}) > 0.2\}$.
+Associating object renders to instance masks in this manner prevents incorrectly fusing object instances between nearby similar objects, in cases where there is large accumulated drift.
+
+% In practice, we reuse the object render generated after pose-graph optimization from the previous frame, for improved performance, as \textit{ray-casting} is the largest bottleneck on the system.
+
+For subsequent fusion of a 2D instance detection to its associated 3D object, the instance mask---containing the object foreground---and the bounding box mask---containing both the foreground and background are used. Similar to \cite{fusionPP} we integrate the object in both the foreground and background through a weighted average of TSDF, color, and additionally maintain binomial foreground-background count variables for each voxel. This smoothes out artifacts from integration of 2D instances with spurious masks.
+
+Finally, we update the object feature map by a gated weight average:
+\begin{align}
+    f_t = \frac{w_{t-1} \cdot f_{t-1} + \mathcal{H}(f_{t-1}, f_{in}) \cdot f_{in}}{w_{t-1} + \mathcal{H}(f_{t-1}, f_{in})},\\
+    \mathcal{H}(f_{t-1}, f_{in}) = \frac{\textrm{sgn}(\lambda - ||f_{t-1} - f_{in}||_1) + 1}{2},
+\end{align}
+where $\mathcal{H}$ is the Heaviside step function that hard-filters outlier input feature map $f_{in}$ compared to the maintained object feature map $f_{t-1}$ with weight $w_{t-1}$ controlled by the threshold $\lambda$.
+
+
+
+
+
+\subsection{Factor graph optimization} \label{subsec: optimization}
+As we have mentioned before, a background volume is maintained for stable tracking, and to handle \textit{objectless} frames. The background volume, additionally maintains the ratio ($r$) of visible volume units in the current camera frustum to the total number allocated volume units in the volume. A low ratio implies that the camera may have moved away from a particular part of the scene. Pose graph optimization is conditionally triggered when the background volume is reset owing to low ratio of visible units ($r < 0.2$) and when there are new objects added into the graph.
+
+Our object factor graph formulation is similar to \cite{salas-moreno_slam_2013, fusionPP}. The variable nodes $\mathcal{X} = \{\mathbf{x}_1, \dots \mathbf{x}_N\}$ are partitioned into camera pose variables $\mathbf{T}^{W}_{C_i} \in SE(3)$ and object pose variables $\mathbf{T}^W_{O_j} \in SE(3)$. The first camera pose is initialized as the world frame $W$.
+
+Assuming a Gaussian noise model, the \textit{MAP} inference problem with the above variable nodes reduces to solving the following non-linear least squares optimization:
+\begin{multline}
+    \mathcal{X}^* = \argmin_{\mathcal{X}} \Big( \sum_{k \in |C|} \|  \mathbf{Z}^{C_k}_{C_{k-1}} \ominus \mathbf{T}^{C_k}_{C_{k-1}} \|_{\Sigma_{k,k-1}}^2 \\
+    + \sum_{j \in |\mathcal{O}|, k \in |\mathcal{C}|} \| \mathbf{Z}^{O_j}_{C_k} \ominus \mathbf{T}^{O_j}_{C_k} \|_{\Sigma_{o_j, k}}^2 \Big),
+\end{multline}
+where the operator $ \mathcal{Y} \ominus \mathcal{X} = \text{Log}(\mathcal{X}^{-1} \mathcal{Y})$ expresses the relative error in the local tangent vector space \cite{sola2018micro}. $\Sigma_{k, k-1}$ denotes the covariance between relative camera pose measurements,  $\Sigma_{o_j, k}$ is the covariance in the camera to object measurement. They can be approximated by information matrices computed from \textit{odometry}, however, empirically we found that a constant information matrix can achieve reasonable results. We obtain the relative camera measurements $\mathbf{Z}^{C_k}_{C_{k-1}}$ from \textit{frame to model odometry} (\S\ref{subsec: tracking}), and obtain frame to object measurements $\mathbf{Z}^{O_j}_{C_k}$ by performing an additional Gauss Newton iteration with only the object pixels. Finally, the expected relative camera pose $\mathbf{T}^{C_k}_{C_{k-1}}$ and expected camera object pose $\mathbf{T}^{O_j}_{C_k}$ used in the factors are calculated as:
+\begin{align}
+    \mathbf{T}^{C_k}_{C_{k-1}} &= \bigg({\mathbf{T}^{W}_{C_k}}\bigg)^{-1} \mathbf{T}^{W}_{C_{k-1}}, \\
+    \mathbf{T}^{O_j}_{C_k} &= \bigg({\mathbf{T}^{W}_{O_j}}\bigg)^{-1} \mathbf{T}^{W}_{C_k}.
+\end{align}
+
+We solve the optimization in GTSAM \cite{dellaert2012factor}, using Levenberg Marquardt. Since the entire object volume is transformed as a rigid body, the object volumes remain unchanged in memory after optimization. We note that this circumvents the time-consuming re-integration that usually takes place in volumetric methods after PGO \cite{whelan2016elasticfusion}.
+
+\subsection{Compositional rendering} \label{subsec: rendering}
+Compositional rendering is a serialized operation that generates normal, vertex, and color maps by ray-casting 3D objects in the viewing frustum into 2D object instances, and is illustrated in Figure~\ref{fig:compositional_render}.
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/compositional-render.pdf}\vspace{-5mm}
+    \caption{Compositional rendering during reconstruction on TUM \textit{fr3\_long\_office\_household} dataset. Left shows the background render, and right shows the composed render. Compositionally rendered objects are shown in bounding boxes.}
+    \vspace*{-1em}
+    \label{fig:compositional_render}
+\end{figure}
+
+\(\langle \mathcal{N}_{C_i}, \mathcal{V}_{C_i}, \mathcal{C}_{C_i} \rangle \) is in fact an aggregation of separate renderings from object volumes \(\langle \mathcal{N}_{C_i}^{V_{{O}_j}}, \mathcal{V}_{C_i}^{V_{{O}_j}}, \mathcal{C}_{C_i}^{V_{\mathcal{O}_j}} \rangle \) and the background volume \(\langle \mathcal{N}_{C_i}^{V_{B}}, \mathcal{V}_{C_i}^{V_{B}}, \mathcal{C}_{C_i}^{V_{{B}}}  \rangle \), depending on the masks. In particular, we render the background volume, based on a background mask that is constructed from the union of existing virtual object masks in the current frame, and associated instance masks.
+
+Then, the composed per-pixel map model render can be obtained as follows:
+\begin{align}
+    &\hat{k} = \argmin_k \mathcal{V}_k(p)[z], ~k \in \{O_1, \cdots, O_n, B\} \\
+    &\langle \mathcal{N}^*(p), \mathcal{V}^*(p), \mathcal{C}^*(p) \rangle = \langle  \mathcal{N}_{\hat{k}}(p), \mathcal{V}_{\hat{k}}(p), \mathcal{C}_{\hat{k}}(p) \rangle,
+\end{align}
+where $\hat{k}$ is the volume index corresponding to the minimum distance to camera center for pixel $p$.
+
+Object volumes not currently visible are downloaded from GPU into CPU memory. Note that downloading the object volume does not affect the optimization problem, since the object volumes are required only for integration and raycasting.
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
