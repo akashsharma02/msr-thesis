@@ -10,26 +10,60 @@ The robotic paradigm describes the relationship of an agent interacting with its
 
 The front end deals with data preparation, modeling and data association such that it is amenable to the underlying optimization. More often than not, the choice of front-end is sensor dependent. For instance, many visual SLAM systems resort to feature based sparse representations, while RGB-Depth sensor based systems resort to direct methods that utilize all the pixels in the input frame. This distinction in the choice of front-end directly influences the choice of map representation in a SLAM system. In particular, a popular choice with visual SLAM system is to use an \emph{explicit} map representation as a collection of 3D points, that is \emph{triangulated} from multiple 2D image feature correspondences, while dense front-end systems, rely on surfel representations or on volumetric representations such as occupancy grids. More recently, after the seminal work \cite{newcombeKinectFusionRealtimeDense2011}, \emph{implicit} map representations have gained popularity as a candidate representation for RGB-Depth SLAM systems.
 
-In this work, since the focus is on high level representations, represented through implicit map representations such as Truncated Signed Distance Function (TSDF) grids, I provide a short introduction of this representation.
+In this work, since the focus is on higher level object landmarks represented through implicit map representations such as Truncated Signed Distance Function (TSDF) grids, I provide a short introduction of this representation.
 
 \subsection{Implicit map representation through TSDFs}
 
-\emph{Implicit} map representations are fundamentally different from \emph{explicit} map representations. As opposed to explicit representations such as point clouds or landmark collections, an implicit map representation refers to one where the environment is defined through a metric space $\Xv$ and structures in this space are described through an \emph{implicit} function $f : \Xv \rightarrow \Rb$. One example of implicit functions is the log-odds occupancy, resulting directly in occupancy grids \cite{thrun2005} and \emph{octree} \cite{hornung2013} representations. Another implicit function is the signed distance function (SDF). Formally, the SDF is defined as follows:
+\emph{Implicit} map representations are fundamentally different from \emph{explicit} map representations. As opposed to point clouds or landmark collections, an implicit map refers to one where the environment is defined through a metric space $\Xv$ and structures in this space are described through an \emph{implicit} function $f : \Xv \rightarrow \Rb$. One example of an implicit function is the log-odds occupancy, resulting directly in occupancy grids \cite{thrunProbabilisticRoboticsIntelligent2005} and \emph{octree} \cite{hornungOctoMapEfficientProbabilistic2013} representations. Another is the signed distance function (SDF) which is relevant for this thesis. Formally, it is defined as follows:
 
-In the metric space $\Xv$ defined with distance $d$, if the surface defined by $\partial \Omega$ demarcates the metric space into subsets  $\Omegav$ and  $\Omegav^c$, the signed distance function $f$ is defined by
+In a metric space $\Xv$ defined with distance $d$, if the surface defined by $\partial \Omega$ demarcates this space into subsets  $\Omegav$ and  $\Omegav^c$, the signed distance function $f$ is defined by
 \begin{align*}
    f = \begin{cases}
        d(\xv, \partial \Omegav), &\text{ if } \xv \in \Omegav\\
        -d(\xv, \partial \Omegav), &\text{ if } \xv \in \Omegav^c
    \end{cases}
 \end{align*}
-In particular, for a 3D euclidean environment, we have that $\Xv = \Rb^3$ and $d = \|\cdot \|_2$, and the surface of the objects (akin to $\partial \Omegav$) in the scene are defined as zero crossings of the signed distance function. In simple words, the signed distance function returns the shortest distance of a query point in euclidean space to its closest surface(\todo{2D SDF illustration} see Figure~\ref{fig:})
+In particular, for the 3D environment, we have that $\Xv = \Rb^3$ with $d = \|\cdot, \cdot \|_2$, and $\partial \Omega$ corresponds to the zero level set of the signed distance function and represents the surface of objects as a topological space. In simple words, the signed distance function returns the shortest distance of a query point in euclidean space to its closest point on the surface boundary (\todo{2D SDF illustration} see Figure~\ref{fig:}).
 
+\subsubsection{TSDF integration}
 
+A TSDF representation requires a metric volume by design, which is implemented as a volumetric grid $V$, arbitrarily initialised in the world frame $\Tv_W = \Iv \in SE(3)$. Consider a single RGB-D frame measurement $\langle \Ic, \Dc \rangle$ that consists of a color ($\Ic$) and depth ($\Dc$) image, at a relative camera pose $\Tv_C^W  = \begin{bmatrix}
+    \Rv_C^W & \tv_C^W \\ 0 & 1
+\end{bmatrix}\in SE(3)$ with camera intrinsics $\Kv$. To integrate the measurement into the TSDF volume, we project  all the query points $q \in \Rb^3$ of the volume $V$ into the current image as follows:
+\begin{align*}
+    \dot{q}^\prime = (\Tv_C^W)^{-1} \dot{q} \\
+    \dot{p} = \lfloor \Kv q^\prime\rfloor
+\end{align*}
+where $\dot{q} = \begin{bmatrix}
+    q^\top & 1
+\end{bmatrix}^\top$  and similarly $\dot{p}$ denote the homogeneous coordinates in $\Rb^2$ and $\Rb^3$. $p \in \Zb^2$ is the associated 2D pixel coordinate in the image and $\lfloor \cdot \rfloor$ finds the nearest integer pixel coordinate in the image. For every matched pixel coordinate, we backproject the associated measurement i.e., the depth value of the pixel $\Dc(p) \in \Rb$ into the query coordinate $q$ as follows:
+\begin{align*}
+    \text{SDF}(q) =  \norm{ \Dc(p) - \frac{1}{\lambda} \|\tv_C^W - q\|_2 }_2
+\end{align*}
+Where $\| \tv_C^W - q \|_2$ is the distance between the query point and the camera center along the camera optical axis, and $\lambda = K^{-1} p$ defines the ray direction for the pixel $p$. This effectively calculates the shortest distance of the query coordinate to the surface.
 
- \begin{figure*}[ht!]
- 	\centering
-    \includegraphics[width=0.90\linewidth]{figs/icra2021-compressed.pdf}
-    \caption{\label{fig:overview} System overview: Top shows the deep object segmentation pipeline that runs asynchronously, Masked keyframes from the segmentation pipeline are used in Data association and map update (shown with red lines). Bottom shows the major stages of the reconstruction system, specifically object models are used in tracking via compositional raycasting (shown with green lines).}
-    \vspace*{-1em}
- \end{figure*}
+This SDF value is truncated such that only a band of SDF values ($+\mu$ to $-\mu$) around the measured surface are computed, to avoid computation of all the query coordinates in the volume.
+Similarly, colors from the image, can be associated to the query coordinates, by unprojection uniquely since a depth image is available.
+
+Now, when we have multiple RGB-D frame measurements $\{\langle \Ic^{(i)}, \Dc^{(i)} \rangle\}_{i=1}^{N}$ with their respective poses $\{ T_{C^{(i)}}^W \}_{i=1}^N$, we can compute TSDF measurements from each individual frame. The global fusion of all these TSDF measurements is then done through weighted average of the TSDF measurements for each query coordinate $q \in \Rb^3$ over the camera frame sequence as follows:
+\begin{align*}
+    d &= \phi(\text{SDF}(q)) \\
+    \text{TSDF}_k(q) &= \frac{\text{TSDF}_{k-1}(q) + d}{W(q) + 1} \\
+    W(q) &= W(q) + 1 \\
+\end{align*}
+Where $\phi$ truncates the $\text{SDF}$ computed for the frame being integrated, and $W(q)$ corresponds to the maintained weight for every voxel coordinate in the volume grid.
+
+In general, the integration process can also be applied to the color values, where the colors are averages elementwise, with the incoming stream of images.
+
+\subsubsection{TSDF Rendering}
+
+TSDF Rendering is the process of generating a virtual depth and color image given a camera pose $T_C^W$ and TSDF volume grid $V$. The previous subsection assumed access to camera poses for global TSDF fusion, but in an actual SLAM setting camera poses are computed in the loop typically through iterative closest point (ICP) registration. TSDF Rendering is the intermediate step that generates a virtual image that the incoming camera frame is registered against (also called \emph{frame to model} registration~\cite{newcombeKinectFusionRealtimeDense2011}). (details in \S\ref{subsec: tracking})
+
+This is accomplished by marching a ray per pixel of the virtual frame, as we have a global TSDF volume, which encodes surfaces as the zero level set (zero crossing). For a given pixel $p \in \Zb^2$, once again the camera ray can be computed as
+\begin{align*}
+    \rv = \Tv_C^W \Kv^{-1} \dot{p}
+\end{align*}
+
+We then march along the ray from the minimum depth supported by the camera (usually assumed to be $0.1$m) to a max depth value defined as the supported camera range, or until we find a zero crossing. Typically this process is sped up by skipping marching along the ray, and using a step size $< \mu$ the truncation threshold. Once a zero crossing has been found, the depth value can be further refined by trilinear interpolation. (details in~\cite{newcombeKinectFusionRealtimeDense2011})
+
+\subsection{TSDF Limitations}

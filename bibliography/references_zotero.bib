@@ -481,6 +481,20 @@
   primaryclass = {cs}
 }
 
+@inproceedings{hartleyLeggedRobotStateEstimation2018,
+  title = {Legged {{Robot State}}-{{Estimation Through Combined Forward Kinematic}} and {{Preintegrated Contact Factors}}},
+  booktitle = {2018 {{IEEE International Conference}} on {{Robotics}} and {{Automation}} ({{ICRA}})},
+  author = {Hartley, R. and Mangelson, J. and Gan, L. and Jadidi, M. Ghaffari and Walls, J. M. and Eustice, R. M. and Grizzle, J. W.},
+  year = {2018},
+  month = may,
+  pages = {4422--4429},
+  issn = {2577-087X},
+  doi = {10.1109/ICRA.2018.8460748},
+  abstract = {State-of-the-art robotic perception systems have achieved sufficiently good performance using Inertial Measurement Units (IMUs), cameras, and nonlinear optimization techniques, that they are now being deployed as technologies. However, many of these methods rely significantly on vision and often fail when visual tracking is lost due to lighting or scarcity of features. This paper presents a state-estimation technique for legged robots that takes into account the robot's kinematic model as well as its contact with the environment. We introduce forward kinematic factors and preintegrated contact factors into a factor graph framework that can be incrementally solved in real-time. The forward kinematic factor relates the robot's base pose to a contact frame through noisy encoder measurements. The preintegrated contact factor provides odometry measurements of this contact frame while accounting for possible foot slippage. Together, the two developed factors constrain the graph optimization problem allowing the robot's trajectory to be estimated. The paper evaluates the method using simulated and real sensory IMU and kinematic data from experiments with a Cassie-series robot designed by Agility Robotics. These preliminary experiments show that using the proposed method in addition to IMU decreases drift and improves localization accuracy, suggesting that its use can enable successful recovery from a loss of visual tracking.},
+  file = {/home/akashsharma/Zotero/storage/J2GA6GYK/Hartley et al. - 2018 - Legged Robot State-Estimation Through Combined For.pdf;/home/akashsharma/Zotero/storage/DME23UA9/8460748.html},
+  keywords = {Cameras,Foot,Kinematics,Legged locomotion,Optimization,Robot sensing systems}
+}
+
 @article{heDeepResidualLearning2015,
   title = {Deep {{Residual Learning}} for {{Image Recognition}}},
   author = {He, Kaiming and Zhang, Xiangyu and Ren, Shaoqing and Sun, Jian},
@@ -525,6 +539,22 @@
   journal = {arXiv:2002.08584 [cs]},
   keywords = {Computer Science - Robotics},
   primaryclass = {cs}
+}
+
+@article{hornungOctoMapEfficientProbabilistic2013,
+  title = {{{OctoMap}}: An Efficient Probabilistic {{3D}} Mapping Framework Based on Octrees},
+  shorttitle = {{{OctoMap}}},
+  author = {Hornung, Armin and Wurm, Kai M. and Bennewitz, Maren and Stachniss, Cyrill and Burgard, Wolfram},
+  year = {2013},
+  month = apr,
+  volume = {34},
+  pages = {189--206},
+  issn = {0929-5593, 1573-7527},
+  doi = {10.1007/s10514-012-9321-0},
+  file = {/home/akashsharma/Zotero/storage/9UCFNRLF/Hornung et al. - 2013 - OctoMap an efficient probabilistic 3D mapping fra.pdf},
+  journal = {Autonomous Robots},
+  language = {en},
+  number = {3}
 }
 
 @inproceedings{hsiaoMHiSAM2MultihypothesisISAM2019,
@@ -660,6 +690,22 @@
   abstract = {The fusion of Iterative Closest Point (ICP) registrations in existing state estimation frameworks relies on an accurate estimation of their uncertainty. In this paper, we study the estimation of this uncertainty in the form of a covariance. First, we scrutinize the limitations of existing closed-form covariance estimation algorithms over 3D datasets. Then, we set out to estimate the covariance of ICP registrations through a data-driven approach, with over 5100000 registrations on 1020 pairs from real 3D point clouds. We assess our solution upon a wide spectrum of environments, ranging from structured to unstructured and indoor to outdoor. The capacity of our algorithm to predict covariances is accurately assessed, as well as the usefulness of these estimations for uncertainty estimation over trajectories. The proposed method estimates covariances better than existing closed-form solutions, and makes predictions that are consistent with observed trajectories.},
   file = {/home/akashsharma/Zotero/storage/DYIXXD7U/Landry et al. - 2019 - CELLO-3D Estimating the Covariance of ICP in the .pdf;/home/akashsharma/Zotero/storage/ABZ8VN6C/8793516.html},
   keywords = {3D datasets,CELLO-3D,closed-form covariance estimation algorithms,closed-form solutions,Computational modeling,covariance analysis,covariance estimation and learning through likelihood optimization framework,covariance matrices,data analysis,data-driven approach,Estimation,ICP registrations,image registration,iterative closest point registrations,iterative methods,Linear programming,Measurement,Prediction algorithms,real 3D point clouds,state estimation,state estimation frameworks,Three-dimensional displays,Uncertainty,uncertainty estimation}
+}
+
+@article{linBARFBundleAdjustingNeural2021,
+  title = {{{BARF}}: {{Bundle}}-{{Adjusting Neural Radiance Fields}}},
+  shorttitle = {{{BARF}}},
+  author = {Lin, Chen-Hsuan and Ma, Wei-Chiu and Torralba, Antonio and Lucey, Simon},
+  year = {2021},
+  month = apr,
+  abstract = {Neural Radiance Fields (NeRF) have recently gained a surge of interest within the computer vision community for its power to synthesize photorealistic novel views of real-world scenes. One limitation of NeRF, however, is its requirement of accurate camera poses to learn the scene representations. In this paper, we propose Bundle-Adjusting Neural Radiance Fields (BARF) for training NeRF from imperfect (or even unknown) camera poses -- the joint problem of learning neural 3D representations and registering camera frames. We establish a theoretical connection to classical image alignment and show that coarse-to-fine registration is also applicable to NeRF. Furthermore, we show that na\textbackslash "ively applying positional encoding in NeRF has a negative impact on registration with a synthesis-based objective. Experiments on synthetic and real-world data show that BARF can effectively optimize the neural scene representations and resolve large camera pose misalignment at the same time. This enables view synthesis and localization of video sequences from unknown camera poses, opening up new avenues for visual localization systems (e.g. SLAM) and potential applications for dense 3D mapping and reconstruction.},
+  archiveprefix = {arXiv},
+  eprint = {2104.06405},
+  eprinttype = {arxiv},
+  file = {/home/akashsharma/Zotero/storage/Z4FAFHWX/Lin et al. - 2021 - BARF Bundle-Adjusting Neural Radiance Fields.html},
+  journal = {arXiv:2104.06405 [cs]},
+  keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Graphics,Computer Science - Machine Learning,Computer Science - Robotics},
+  primaryclass = {cs}
 }
 
 @article{lindellAutoIntAutomaticIntegration2020,
@@ -1111,6 +1157,37 @@
   language = {en}
 }
 
+@article{straubReplicaDatasetDigital2019,
+  title = {The {{Replica Dataset}}: {{A Digital Replica}} of {{Indoor Spaces}}},
+  shorttitle = {The {{Replica Dataset}}},
+  author = {Straub, Julian and Whelan, Thomas and Ma, Lingni and Chen, Yufan and Wijmans, Erik and Green, Simon and Engel, Jakob J. and {Mur-Artal}, Raul and Ren, Carl and Verma, Shobhit and Clarkson, Anton and Yan, Mingfei and Budge, Brian and Yan, Yajie and Pan, Xiaqing and Yon, June and Zou, Yuyang and Leon, Kimberly and Carter, Nigel and Briales, Jesus and Gillingham, Tyler and Mueggler, Elias and Pesqueira, Luis and Savva, Manolis and Batra, Dhruv and Strasdat, Hauke M. and De Nardi, Renzo and Goesele, Michael and Lovegrove, Steven and Newcombe, Richard},
+  year = {2019},
+  month = jun,
+  abstract = {We introduce Replica, a dataset of 18 highly photo-realistic 3D indoor scene reconstructions at room and building scale. Each scene consists of a dense mesh, high-resolution high-dynamic-range (HDR) textures, per-primitive semantic class and instance information, and planar mirror and glass reflectors. The goal of Replica is to enable machine learning (ML) research that relies on visually, geometrically, and semantically realistic generative models of the world - for instance, egocentric computer vision, semantic segmentation in 2D and 3D, geometric inference, and the development of embodied agents (virtual robots) performing navigation, instruction following, and question answering. Due to the high level of realism of the renderings from Replica, there is hope that ML systems trained on Replica may transfer directly to real world image and video data. Together with the data, we are releasing a minimal C++ SDK as a starting point for working with the Replica dataset. In addition, Replica is `Habitat-compatible', i.e. can be natively used with AI Habitat for training and testing embodied agents.},
+  archiveprefix = {arXiv},
+  eprint = {1906.05797},
+  eprinttype = {arxiv},
+  journal = {arXiv:1906.05797 [cs, eess]},
+  keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Graphics,Electrical Engineering and Systems Science - Image and Video Processing},
+  primaryclass = {cs, eess}
+}
+
+@inproceedings{sturmBenchmarkEvaluationRGBD2012,
+  title = {A Benchmark for the Evaluation of {{RGB}}-{{D SLAM}} Systems},
+  booktitle = {2012 {{IEEE}}/{{RSJ International Conference}} on {{Intelligent Robots}} and {{Systems}}},
+  author = {Sturm, Jrgen and Engelhard, Nikolas and Endres, Felix and Burgard, Wolfram and Cremers, Daniel},
+  year = {2012},
+  month = oct,
+  pages = {573--580},
+  publisher = {{IEEE}},
+  address = {{Vilamoura-Algarve, Portugal}},
+  doi = {10.1109/IROS.2012.6385773},
+  abstract = {In this paper, we present a novel benchmark for the evaluation of RGB-D SLAM systems. We recorded a large set of image sequences from a Microsoft Kinect with highly accurate and time-synchronized ground truth camera poses from a motion capture system. The sequences contain both the color and depth images in full sensor resolution (640 \texttimes{} 480) at video frame rate (30 Hz). The ground-truth trajectory was obtained from a motion-capture system with eight high-speed tracking cameras (100 Hz). The dataset consists of 39 sequences that were recorded in an office environment and an industrial hall. The dataset covers a large variety of scenes and camera motions. We provide sequences for debugging with slow motions as well as longer trajectories with and without loop closures. Most sequences were recorded from a handheld Kinect with unconstrained 6-DOF motions but we also provide sequences from a Kinect mounted on a Pioneer 3 robot that was manually navigated through a cluttered indoor environment. To stimulate the comparison of different approaches, we provide automatic evaluation tools both for the evaluation of drift of visual odometry systems and the global pose error of SLAM systems. The benchmark website [1] contains all data, detailed descriptions of the scenes, specifications of the data formats, sample code, and evaluation tools.},
+  file = {/home/akashsharma/Zotero/storage/QB85WDKR/Sturm et al. - 2012 - A benchmark for the evaluation of RGB-D SLAM syste.pdf},
+  isbn = {978-1-4673-1736-8 978-1-4673-1737-5 978-1-4673-1735-1},
+  language = {en}
+}
+
 @article{sumikuraOpenVSLAMVersatileVisual2019,
   title = {{{OpenVSLAM}}: {{A Versatile Visual SLAM Framework}}},
   shorttitle = {{{OpenVSLAM}}},
@@ -1220,6 +1297,14 @@
   keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Graphics},
   language = {en},
   primaryclass = {cs}
+}
+
+@book{thrunProbabilisticRoboticsIntelligent2005,
+  title = {Probabilistic {{Robotics}} ({{Intelligent Robotics}} and {{Autonomous Agents}})},
+  author = {Thrun, Sebastian and Burgard, Wolfram and Fox, Dieter},
+  year = {2005},
+  publisher = {{The MIT Press}},
+  isbn = {978-0-262-20162-9}
 }
 
 @article{tungLearningSpatialCommon2019,

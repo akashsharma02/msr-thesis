@@ -1,5 +1,11 @@
 \chapter{Object SLAM} \label{chap:object-slam}
 \section{Method} \label{sec: methodology}
+ \begin{figure*}[ht!]
+ 	\centering
+    \includegraphics[width=0.90\linewidth]{figs/icra2021-compressed.pdf}
+    \caption{\label{fig:overview} System overview: Top shows the deep object segmentation pipeline that runs asynchronously, Masked keyframes from the segmentation pipeline are used in Data association and map update (shown with red lines). Bottom shows the major stages of the reconstruction system, specifically object models are used in tracking via compositional raycasting (shown with green lines).}
+ \end{figure*}
+
 Our pipeline can be divided into typical SLAM components and a deep perception module, connected by an object-based semantic map. Figure~\ref{fig:overview} provides an overview.
 
 %
@@ -45,12 +51,12 @@ $\mathbf{T}_{O_j}^W \in SE(3)$ encodes a rigid transformation from object $j$ to
 
 In \textit{RGB-D} camera tracking, we seek to estimate the relative camera pose \(\mathbf{T}^{C_t}_{C_s}\) given an incoming \textit{RGB-D} target frame \( \langle \mathcal{I}_{C_t}, \mathcal{D}_{C_t}\rangle \) and a source model \( \langle \mathcal{N}_{C_{s}}, \mathcal{V}_{C_{s}}, \mathcal{C}_{C_{s}}\rangle \) of the scene rendered by placing a virtual camera at the previous camera frame ${C_s}$.
 
-We accomplish this by minimizing the joint weighted dense geometric error residual $r_D$ and the photometric error residual $r_I$. The general energy function is formulated as in \cite{park_colored_2017} by accumulating residual at every point $p \in \mathbb{R}^2$ with a valid data association:
+We accomplish this by minimizing the joint weighted dense geometric error residual $r_D$ and the photometric error residual $r_I$. The general energy function is formulated as in \cite{parkColoredPointCloud2017} by accumulating residual at every point $p \in \mathbb{R}^2$ with a valid data association:
 \begin{multline}
     E(\mathbf{T}^{C_t}_{C_{s}}) = \sum_{p} (1 - \sigma) r_I^2(\mathbf{T}^{C_t}_{C_s}, p)
     + \sigma r_D^2(\mathbf{T}^{C_t}_{C_s}, p), \label{eq:1}
 \end{multline}
-Here, we adapt the geometric ICP residual as the point-to-plane distance between the incoming depth map $\mathcal{D}$ and the rendered vertex and normal map $(\mathcal{V}_{C_s}, \mathcal{N}_{C_s})$ as follows, using the formulation in \cite{kinectfusion}:
+Here, we adapt the geometric ICP residual as the point-to-plane distance between the incoming depth map $\mathcal{D}$ and the rendered vertex and normal map $(\mathcal{V}_{C_s}, \mathcal{N}_{C_s})$ as follows, using the formulation in \cite{newcombeKinectFusionRealtimeDense2011}:
 \begin{align}
     r_D(T^{C_t}_{C_s}, p) = \bigg((T^{C_t}_{C_{s}} \mathcal{V}_{C_s}( \hat{p} ) - \mathcal{V}_{C_{t}}(p )\bigg) \cdot \mathcal{N}_{C_{t}}( p ), \label{eq:2}
 \end{align}
@@ -65,7 +71,7 @@ In equations (\ref{eq:2}) and (\ref{eq:3}), $\hat{p}$ is the correspondence of $
 \end{align}
 It must be noted that the $p$s are a subset of pixels with valid object-level data associations detailed in \S\ref{subsec: rendering}.
 
-The energy function in equation \ref{eq:1} is minimized using the Gauss-Newton algorithm. We implement the minimization in a coarse to fine scheme using an image pyramid, on the GPU in parallel since each pixel acts independently in the energy function using \textit{reduction} with appropriate thread conflict handling as described in \cite{dong2019gpu}.
+The energy function in equation \ref{eq:1} is minimized using the Gauss-Newton algorithm. We implement the minimization in a coarse to fine scheme using an image pyramid, on the GPU in parallel since each pixel acts independently in the energy function using \textit{reduction} with appropriate thread conflict handling as described in \cite{dongGPUAcceleratedRobust2019}.
 
 
 \begin{figure}[t!]
@@ -157,7 +163,7 @@ where the operator $ \mathcal{Y} \ominus \mathcal{X} = \text{Log}(\mathcal{X}^{-
     \mathbf{T}^{O_j}_{C_k} &= \bigg({\mathbf{T}^{W}_{O_j}}\bigg)^{-1} \mathbf{T}^{W}_{C_k}.
 \end{align}
 
-We solve the optimization in GTSAM \cite{dellaert2012factor}, using Levenberg Marquardt. Since the entire object volume is transformed as a rigid body, the object volumes remain unchanged in memory after optimization. We note that this circumvents the time-consuming re-integration that usually takes place in volumetric methods after PGO \cite{whelan2016elasticfusion}.
+We solve the optimization in GTSAM \cite{dellaert2012factor}, using Levenberg Marquardt. Since the entire object volume is transformed as a rigid body, the object volumes remain unchanged in memory after optimization. We note that this circumvents the time-consuming re-integration that usually takes place in volumetric methods after PGO \cite{whelanElasticFusionDenseSLAM2015}.
 
 \subsection{Compositional rendering} \label{subsec: rendering}
 Compositional rendering is a serialized operation that generates normal, vertex, and color maps by ray-casting 3D objects in the viewing frustum into 2D object instances, and is illustrated in Figure~\ref{fig:compositional_render}.
