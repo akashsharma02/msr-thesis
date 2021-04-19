@@ -1,0 +1,22 @@
+
+\begin{algorithm}[htpb]
+\begin{algorithmic}[1]
+    \Procedure{Gauss Newton}{$g(\Xv), \Xv^{(0)}$}
+    \State $d = \text{threshold}$
+    \For{t = 0 to N}
+        \State $\Av, \bv \leftarrow$ Linearize$(g(\Xv))$ at $\Xv^{(t)}$
+        \State $\Delta^* \leftarrow (\Av^\top \Av)^{-1} \Av^\top \bv$ \Comment{using QR or Cholesky factorization}
+        \State $\text{temp} \leftarrow \Xv^{(t)} + \Delta^*$
+        \If{$g(\text{temp}) < g(\Xv^{(t)})$}
+            \State $\Xv^{(t+1)} \leftarrow \text{temp}$
+            \If{$g(\Xv^{(t+1)}) - g(\Xv^{(t)}) < d$}
+                \State \textbf{break}
+            \EndIf
+        \EndIf
+    \EndFor
+    \State \Return $\Xv^{(t)}$
+\EndProcedure
+\end{algorithmic}
+\caption[short caption]{Iterative Non-linear optimization}
+\label{gauss-newton}
+\end{algorithm}

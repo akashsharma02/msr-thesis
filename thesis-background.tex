@@ -1,5 +1,4 @@
 % -*- mode:LaTex; mode:visual-line; mode:flyspell; fill-column:75-*-
-
 \chapter{Background} \label{chap:background}
 
 As eluded to in \ref{chap:introduction}, SLAM systems that run on real robots can be crudely divided into \emph{front-end} and \emph{back-end}. This chapter is a primer on algorithms and methods used in the \emph{front-end} and \emph{back-end}.
@@ -67,3 +66,87 @@ This is accomplished by marching a ray per pixel of the virtual frame, as we hav
 We then march along the ray from the minimum depth supported by the camera (usually assumed to be $0.1$m) to a max depth value defined as the supported camera range, or until we find a zero crossing. Typically this process is sped up by skipping marching along the ray, and using a step size $< \mu$ the truncation threshold. Once a zero crossing has been found, the depth value can be further refined by trilinear interpolation. (details in~\cite{newcombeKinectFusionRealtimeDense2011})
 
 \subsection{TSDF Limitations}
+
+Based on the discussion of TSDF for map representation in SLAM, the following limitations might be apparent to the keen reader.
+\begin{enumerate}
+    \item \textbf{TSDF representation is memory intensive:} A naive TSDF representation, utilizes a 3D volumetric grid to represent the scene -- typically  a voxel grid of resolution $512^3$ covering a bounded volume of about $4m^3$. This makes the entire system very memory intensive. Later works such as Voxel Hashing~\cite{neissner} and OctoMap \cite{hornungOctoMapEfficientProbabilistic2013} have tried to ameliorate this issue. In our implementation, we utilize a spatial hashing based TSDF implementation based on \cite{dongGPUAcceleratedRobust2019} to achieve memory efficiency.
+    \item \textbf{TSDFs are computationally intensive:} During integration of an incoming frame, all pixels that are projectively associated to the 3D query coordinates are updated requiring about $640\times 480 = 307200$ for a VGA resolution image. Similarly, during TSDF rendering, each pixel to be rendered requires at most $\frac{\|r\|_2}{\mu}$ evaluations, where $\|r\|_2$ is the ray length (at most the length of TSDF volume cube diagonal), and $\mu$ is the TSDF truncation width. Therefore, ray-casting is typically the most computationally intensive step in any dense RGB-D slam system. Observing that each voxel coordinate is updated independent of every other voxel, a GPU can (and is) used to parallelize all TSDF operations, to obtain realtime operation.
+    \item \textbf{Cannot easily smooth noisy pose estimates:} It is not easy to correct noisy pose estimates with implicit models, and therefore most early systems employed only a filtering based integration \cite{newcombeKinectFusionRealtimeDense2011}. This is because to correct for a noisy pose estimate in retrospect, requires the expensive operation of subtracting the weighted TSDF values in the global volume from the appropriate coordinates, and re-integrating the volume with corrected TSDF values \cite{daiBundleFusionRealtimeGlobally2017}. \cite{whelanKintinuousSpatiallyExtended} used submaps to subvert this problem, however with large TSDF volumes as submaps there are still locally noisy measurements that are not corrected for. In our method, since we use a TSDF representation only for landmark objects, we reap the benefits of explicit representation, where the whole landmark pose can be optimized, but each landmark provides a dense and appealing representation. (see Figure~\ref{fig:})
+\end{enumerate}
+
+\section{The Back End}
+
+The back end is responsible to generate a reasonable explanation for the abstract sensor measurements, data association and state variables that are provided from the front end. As opposed to filtering based methods such as Kalman Filter, more recently smoothing formulations based on matrix factorization have provided exact solutions (in the linear case) by adding the entire trajectory into the optimization problem while simplifying the solution~\cite{kaessIncrementalSmoothingMapping}. In this section, I review the batch smoothing formulation that is quite common in graph based SLAM back-ends today~\cite{grisettiTutorialGraphBasedSLAM, dellaertFactorGraphsRobot2017}.
+
+\subsection{SLAM and non-linear least squares}
+
+As introduced in \ref{chap:introduction}, by treating the robot states and landmarks as random variables given measurements, the SLAM problem can be treated as the maximum a posteriori (MAP) estimation of robot and landmark states. Now, consider a collection of robot state variables $\Xc \triangleq \{ \xv_t \}_{t=1}^{T}$, and a collection of landmarks $\Lc \triangleq \{ \ell_m \}_{m=1}^{M}$, and set of measurements $\Zc \triangleq \{\{\zv_n \}_{n=1}^{N}, \{\zv_t\}_{t=1}^{T}\}$ including both landmark and odometry measurements respectively, then the MAP estimation is given as
+\begin{align}
+    \Xc^*, \Lc^* = \argmax_{\Xc, \Lc} p(\Xc, \Lc | \Zc) = \argmax_{\Xc, \Lc} p(\Zc | \Xc, \Lc) p(\Xc, \Lc) \label{eq:2.1}
+\end{align}
+
+While MAP estimation in general is known to be NP-Hard, by assuming reasonable conditional independences between the associated variables (see Figure~\ref{fig:}), i.e., by making the markovian assumption on the state variables, and observing that measurements are local, we can write the joint probability in \ref{eq:2.1} as follows:
+\begin{align}
+    p(\Xc, \Lc, \Zc) &= p(\xv_0) \prod_{n=1}^{N} p(\zv_n | \xv_{\alpha_n}, \ell_{\beta_n}) \prod_{t=1}^{T} p(\zv_t | \xv_{t-1}, \xv_{t})\nonumber\\
+    \implies \log p(\Xc, \Lc, \Zc) &= \log p(\xv_0) + \sum_{n=1}^{N} \log p(\zv_n | \xv_{\alpha_n}, \ell_{\beta_n}) + \sum_{t=1}^{T} \log p(\zv_t | \xv_{t-1}, \xv_{t})
+\end{align}
+Note, that the above problem assumes known \emph{data association} between measurements $\zv_n$ of landmark $\ell_{\beta_n}$ at a robot pose $\xv_{\alpha_n}$as $\Dc := \{(\alpha_n, \beta_n)\}_{n=1}^{N}$ \cite{bowmanProbabilisticDataAssociation2017}.
+Now as is typical in SLAM, we assume gaussian measurement noise in each of the measurements i.e.,
+\begin{align*}
+    \zv_0 &= \xv_0 + \nuv_0\\
+    \zv_n &= h_n(\xv_{\alpha_n}, \ell_{\beta_n}) + \nuv_n\\
+    \zv_t &= h_t(\xv_{t-1}, \xv_t) ~+ \nuv_t
+\end{align*}
+Where $\nuv_n$ and $\nuv_t$ are the intrinsic noise in the respective measurements, each distributed as zero mean noise with respective covariances $\Sigma_n$ and $\Sigma_t$. Also note that we added a phantom measurement $\zv_0$ to constrain the first pose with a (empirically) small covariance $\Sigma_0$
+\begin{align*}
+    p(\xv_0) &\propto \exp\{ \|\zv_0 - \xv_0\|^2_{\Sigma_0}\}\\
+    p(\zv_n | \xv_{\alpha_n}, \ell_{\beta_n}) &\propto \exp\{ \|\zv_n - h_n(\xv_{\alpha_n}, \ell_{\beta_n})\|^2_{\Sigma_n}\}\\
+    p(\zv_t | \xv_{t-1}, \ell_{t}) &\propto \exp\{ \|\zv_t - h_n(\xv_{t-1}, \ell_{t})\|^2_{\Sigma_t}\}
+\end{align*}
+Observe that
+\begin{align*}
+    \Xc^*, \Lc^* &= \argmax_{\Xc, \Lc} p(\Xc, \Lc, \Zc) = \argmin_{\Xc, \Lc} - \log p(\Xc, \Lc, \Zc)
+\end{align*}
+Now writing the joint probability using the factorized measurement distributions we have
+\begin{align*}
+    \Xc^*, \Lc^* = \argmin_{\Xc, \Lc} \Bigg \{ \| \zv_0 - \xv_0 \|_{\Sigma_0}^2 + &\sum_{n=1}^{N} \| \zv_n - h_n(\xv_{\alpha_n}, \ell_{\beta_n}) \|_{\Sigma_t}^2 + \\&\sum_{t=1}^{T}\| \zv_t - h_t(\xv_{t-1}, \xv_{t}) \|_{\Sigma_n}^2 \Bigg \}
+\end{align*}
+If we generalize the different types of measurements in the system as $h_i(\Xv_i)$, and subsume the landmarks and state variables into a single state vector $\Xc$ then we may write the above as:
+\begin{align}
+    \Xc^* = \argmin_{\Xc} \Bigg \{ &\sum_{i=1}^{N} \| \zv_i - h_i(\Xv_i) \|_{\Sigma_i}^2 \Bigg \} \label{eq:2.3}
+\end{align}
+The above minimization is a non-linear least squares optimization which is typically solved by iteratively linearizing the measurement models and solving a series of linear approximations to the problem to approach a local minima solution for landmark and robot latent state variables.
+
+\subsection{Iterative Linearization and Gauss Newton}
+
+\begin{figure}[htpb]
+    \centering
+    \includegraphics[width=0.4\linewidth]{figs/linearization}
+    \caption{Illustration of linearization using taylor's expansion}
+    \label{fig:taylor}
+\end{figure}
+
+Consider a single non-linear measurement $h_i( \cdot )$, then by taylor's expansion, we can linearize the measurement at a linearization point $\Xv_i^{(0)}$ as follows (see Figure~\ref{fig:taylor}):
+\begin{align*}
+    h_i(\Xv_i) \approx h_i(\Xv_i^{(0)}) + \frac{\partial h_i}{\partial \Xv_i} \Bigg |_{\Xv_i^{(0)}} (\Xv_i - \Xv_i^{(0)})
+\end{align*}
+If we define the jacobian as $\Jv_i \triangleq \frac{\partial h_i}{\partial \Xv_i} \left|_{\Xv_i^{(0)}}$, and $\Delta_i \triangleq (\Xv_i - \Xv_i^{(0)})$ and substitute in the general non-linear least squares objective \ref{eq:2.3}:
+\begin{align*}
+    \Delta^* = \argmin_{\Delta}\sum_{i} \| \{\zv_i - h_i(X_i^{(0)})\} - \Jv_i \Delta_i \|_{\Sigma_i}^2
+\end{align*}
+where $\qv_i = \zv_i - h_i(\Xv_i^{(0)})$ is the prediction error at the linearization point, and $\Delta^*$ is the solution to the locally linearized problem.
+\begin{align*}
+    \Delta^* &= \argmin_{\Delta}\sum_{i} \| \qv_i - \Jv_i \Delta_i \|_{\Sigma_i}^2 = \argmin_{\Delta}\sum_{i} (\qv_i - \Jv_i \Delta_i)^\top \Sigma_i^{-1} (\qv_i - \Jv_i \Delta_i)\\
+             &=  \argmin_{\Delta}\sum_{i} \left\{\Sigma_i^{-1/2}(\qv_i - \Jv_i \Delta_i)\right\}^\top \left\{ \Sigma_i^{-1/2} (\qv_i - \Jv_i \Delta_i)\right\}\\
+             &= \argmin_{\Delta}\sum_{i} \| \bv_i - \Av_i \Delta_i \|_2^2 = \argmin_{\Delta} \| \bv - \Av \Delta\|_2^2
+\end{align*}
+By writing $\bv_i = \Sigma_i^{-1/2} \qv_i$ and $\Av_i = \Sigma_i^{-1/2} \Jv_i$ and then collecting them in the matrix $\bv$ and $\Av$ respectively, we obtain the standard least squares problem, that can then be solved using \emph{normal equations}.
+
+The above solution gives us the local update $\Delta^*$ for a linearization point $\Xv^{(0)}$. To solve a non-linear problem, we solve for local updates iteratively as in Algorithm~\ref{gauss-newton}
+\input{algorithms/gauss-newton.tex}
+
+A more detailed treatment of sophisticated non-linear optimization algorithms in the context of SLAM is provided in \cite{dellaertFactorGraphsRobot2017}.
+
+\subsection{Discussion and Limitations}
+% In theory implicit map representations provide a method for water tight  reconstructions that are visually appealing, and in general more detailed when compared to feature based methods (see Figure Figure~\ref{fig:}), however these methods typically do not employ smoothing based back ends, and therefore are unable to correct for noisy pose estimates in retrospect. This is because, it is not easy to make a correction to an integrated measurement in the TSDF representation. In particular, to correct a single pose estimate, the measurement that had been integrated into the global TSDF has to be removed by subtractingthe corresponding TSDF value from the affected 3D query coordinates, and then re-integrating the new measurement appropriately.
+

@@ -24,7 +24,7 @@ Typically, when the map is modeled as a collection of landmarks $ \Lc = \{\ell_m
     \hat{\Xc}, \hat{\Lc} &= \argmax_{\Xc, \Lc} p(\Xc, \Lc | \Zc) \\
                          &\propto \argmax_{\Xc, \Lc} p(\Zc | \Xc, \Lc) p(\Xc, \Lc)
 \end{align}
-Note, that the above problem assumes known \emph{data association} between measurements $\zv_n$ of landmark $\ell_{\beta_n}$ at a robot pose $\xv_{\alpha_n}$as $\Dc := \{(\alpha_n, \beta_n)\}_{n=1}^{N}$ \cite{bowmanProbabilisticDataAssociation2017}.
+% Note, that the above problem assumes known \emph{data association} between measurements $\zv_n$ of landmark $\ell_{\beta_n}$ at a robot pose $\xv_{\alpha_n}$as $\Dc := \{(\alpha_n, \beta_n)\}_{n=1}^{N}$ \cite{bowmanProbabilisticDataAssociation2017}.
 
 In reality, however, a SLAM framework for a robot needs to deal with raw sensor measurements. Therefore, typically the system is divided into two parts: \emph{front-end} and \emph{back-end}. The front-end is dedicated to data pre-processing, data association and feeds into the back-end, dedicated to the optimization that results in the best estimate of robot state and landmarks.
 
