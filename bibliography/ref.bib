@@ -1,0 +1,405 @@
+
+@inproceedings{salas-moreno_slam_2013,
+	address = {Portland, OR, USA},
+	title = {{SLAM}++: {Simultaneous} {Localisation} and {Mapping} at the {Level} of {Objects}},
+	isbn = {978-0-7695-4989-7},
+	shorttitle = {{SLAM}++},
+	url = {http://ieeexplore.ieee.org/document/6619022/},
+	doi = {10.1109/CVPR.2013.178},
+	abstract = {We present the major advantages of a new ‘object oriented’ 3D SLAM paradigm, which takes full advantage in the loop of prior knowledge that many scenes consist of repeated, domain-speciﬁc objects and structures. As a hand-held depth camera browses a cluttered scene, realtime 3D object recognition and tracking provides 6DoF camera-object constraints which feed into an explicit graph of objects, continually reﬁned by efﬁcient pose-graph optimisation. This offers the descriptive and predictive power of SLAM systems which perform dense surface reconstruction, but with a huge representation compression. The object graph enables predictions for accurate ICP-based camera to model tracking at each live frame, and efﬁcient active search for new objects in currently undescribed image regions. We demonstrate real-time incremental SLAM in large, cluttered environments, including loop closure, relocalisation and the detection of moved objects, and of course the generation of an object level scene description with the potential to enable interaction.},
+	language = {en},
+	urldate = {2020-05-08},
+	booktitle = {2013 {IEEE} {Conference} on {Computer} {Vision} and {Pattern} {Recognition}},
+	publisher = {IEEE},
+	author = {Salas-Moreno, Renato F. and Newcombe, Richard A. and Strasdat, Hauke and Kelly, Paul H.J. and Davison, Andrew J.},
+	month = jun,
+	year = {2013},
+	pages = {1352--1359}
+}
+
+@inproceedings{rusu_fast_2009,
+	address = {Kobe},
+	title = {Fast {Point} {Feature} {Histograms} ({FPFH}) for {3D} registration},
+	isbn = {978-1-4244-2788-8},
+	url = {http://ieeexplore.ieee.org/document/5152473/},
+	doi = {10.1109/ROBOT.2009.5152473},
+	abstract = {In our recent work [1], [2], we proposed Point Feature Histograms (PFH) as robust multi-dimensional features which describe the local geometry around a point p for 3D point cloud datasets. In this paper, we modify their mathematical expressions and perform a rigorous analysis on their robustness and complexity for the problem of 3D registration for overlapping point cloud views. More concretely, we present several optimizations that reduce their computation times drastically by either caching previously computed values or by revising their theoretical formulations. The latter results in a new type of local features, called Fast Point Feature Histograms (FPFH), which retain most of the discriminative power of the PFH. Moreover, we propose an algorithm for the online computation of FPFH features for realtime applications. To validate our results we demonstrate their efﬁciency for 3D registration and propose a new sample consensus based method for bringing two datasets into the convergence basin of a local non-linear optimizer: SAC-IA (SAmple Consensus Initial Alignment).},
+	language = {en},
+	urldate = {2020-05-07},
+	booktitle = {2009 {IEEE} {International} {Conference} on {Robotics} and {Automation}},
+	publisher = {IEEE},
+	author = {Rusu, Radu Bogdan and Blodow, Nico and Beetz, Michael},
+	month = may,
+	year = {2009},
+	pages = {3212--3217}
+}
+
+@inproceedings{bylow_real-time_2013,
+	title = {Real-{Time} {Camera} {Tracking} and {3D} {Reconstruction} {Using} {Signed} {Distance} {Functions}},
+	isbn = {978-981-07-3937-9},
+	url = {http://www.roboticsproceedings.org/rss09/p35.pdf},
+	doi = {10.15607/RSS.2013.IX.035},
+	abstract = {The ability to quickly acquire 3D models is an essential capability needed in many disciplines including robotics, computer vision, geodesy, and architecture. In this paper we present a novel method for real-time camera tracking and 3D reconstruction of static indoor environments using an RGB-D sensor. We show that by representing the geometry with a signed distance function (SDF), the camera pose can be efﬁciently estimated by directly minimizing the error of the depth images on the SDF. As the SDF contains the distances to the surface for each voxel, the pose optimization can be carried out extremely fast. By iteratively estimating the camera poses and integrating the RGB-D data in the voxel grid, a detailed reconstruction of an indoor environment can be achieved. We present reconstructions of several rooms using a hand-held sensor and from onboard an autonomous quadrocopter. Our extensive evaluation on publicly available benchmark data shows that our approach is more accurate and robust than the iterated closest point algorithm (ICP) used by KinectFusion, and yields often a comparable accuracy at much higher speed to feature-based bundle adjustment methods such as RGB-D SLAM for up to medium-sized scenes.},
+	language = {en},
+	urldate = {2020-05-06},
+	booktitle = {Robotics: {Science} and {Systems} {IX}},
+	publisher = {Robotics: Science and Systems Foundation},
+	author = {Bylow, Erik and Sturm, Jürgen and Kerl, Christian and Kahl, Fredrik and Cremers, Daniel},
+	month = jun,
+	year = {2013}
+}
+
+@article{chaplot_learning_2020,
+	title = {{LEARNING} {TO} {EXPLORE} {USING} {ACTIVE} {NEURAL} {SLAM}},
+	abstract = {This work presents a modular and hierarchical approach to learn policies for exploring 3D environments, called ‘Active Neural SLAM’. Our approach leverages the strengths of both classical and learning-based methods, by using analytical path planners with learned SLAM module, and global and local policies. The use of learning provides ﬂexibility with respect to input modalities (in the SLAM module), leverages structural regularities of the world (in global policies), and provides robustness to errors in state estimation (in local policies). Such use of learning within each module retains its beneﬁts, while at the same time, hierarchical decomposition and modular training allow us to sidestep the high sample complexities associated with training end-to-end policies. Our experiments in visually and physically realistic simulated 3D environments demonstrate the effectiveness of our approach over past learning and geometry-based approaches. The proposed model can also be easily transferred to the PointGoal task and was the winning entry of the CVPR 2019 Habitat PointGoal Navigation Challenge.},
+	language = {en},
+	author = {Chaplot, Devendra Singh and Gandhi, Dhiraj and Gupta, Saurabh and Gupta, Abhinav and Salakhutdinov, Ruslan},
+	year = {2020},
+	pages = {18}
+}
+
+@article{rabiner_tutorial_1989,
+	title = {A tutorial on hidden {Markov} models and selected applications in speech recognition},
+	volume = {77},
+	issn = {1558-2256},
+	doi = {10.1109/5.18626},
+	abstract = {This tutorial provides an overview of the basic theory of hidden Markov models (HMMs) as originated by L.E. Baum and T. Petrie (1966) and gives practical details on methods of implementation of the theory along with a description of selected applications of the theory to distinct problems in speech recognition. Results from a number of original sources are combined to provide a single source of acquiring the background required to pursue further this area of research. The author first reviews the theory of discrete Markov chains and shows how the concept of hidden states, where the observation is a probabilistic function of the state, can be used effectively. The theory is illustrated with two simple examples, namely coin-tossing, and the classic balls-in-urns system. Three fundamental problems of HMMs are noted and several practical techniques for solving these problems are given. The various types of HMMs that have been studied, including ergodic as well as left-right models, are described.{\textless}{\textgreater}},
+	number = {2},
+	journal = {Proceedings of the IEEE},
+	author = {Rabiner, L.R.},
+	month = feb,
+	year = {1989},
+	note = {Conference Name: Proceedings of the IEEE},
+	keywords = {Hidden Markov models, Markov processes, Speech recognition, Tutorial, balls-in-urns system, coin-tossing, discrete Markov chains, ergodic models, hidden Markov models, hidden states, left-right models, probabilistic function, speech recognition},
+	pages = {257--286}
+}
+
+@book{bishop_pattern_2006,
+	address = {New York},
+	series = {Information science and statistics},
+	title = {Pattern recognition and machine learning},
+	isbn = {978-0-387-31073-2},
+	language = {en},
+	publisher = {Springer},
+	author = {Bishop, Christopher M.},
+	year = {2006},
+	keywords = {Machine learning, Pattern perception}
+}
+
+@inproceedings{rusinkiewicz_efficient_2001,
+	title = {Efficient variants of the {ICP} algorithm},
+	doi = {10.1109/IM.2001.924423},
+	abstract = {The ICP (Iterative Closest Point) algorithm is widely used for geometric alignment of three-dimensional models when an initial estimate of the relative pose is known. Many variants of ICP have been proposed, affecting all phases of the algorithm from the selection and matching of points to the minimization strategy. We enumerate and classify many of these variants, and evaluate their effect on the speed with which the correct alignment is reached. In order to improve convergence for nearly-flat meshes with small features, such as inscribed surfaces, we introduce a new variant based on uniform sampling of the space of normals. We conclude by proposing a combination of ICP variants optimized for high speed. We demonstrate an implementation that is able to align two range images in a few tens of milliseconds, assuming a good initial guess. This capability has potential application to real-time 3D model acquisition and model-based tracking.},
+	booktitle = {Proceedings {Third} {International} {Conference} on 3-{D} {Digital} {Imaging} and {Modeling}},
+	author = {Rusinkiewicz, S. and Levoy, M.},
+	month = may,
+	year = {2001},
+	keywords = {Convergence, Geometry, Image sampling, Iterative algorithms, Iterative closest point algorithm, Iterative methods, Layout, Minimization methods, Rough surfaces, Solid modeling, distance measurement, geometric alignment, image processing, inscribed surfaces, iterative closest point algorithm, minimisation, minimization strategy, model-based tracking, nearly-flat meshes, range images, real-time 3D model acquisition, real-time systems, three-dimensional models, uniform sampling},
+	pages = {145--152}
+}
+
+@inproceedings{rusinkiewicz_efficient_2001-1,
+	address = {Quebec City, Que., Canada},
+	title = {Efficient variants of the {ICP} algorithm},
+	isbn = {978-0-7695-0984-6},
+	url = {http://ieeexplore.ieee.org/document/924423/},
+	doi = {10.1109/IM.2001.924423},
+	abstract = {The ICP (Iterative Closest Point) algorithm is widely used for geometric alignment of three-dimensional models when an initial estimate of the relative pose is known. Many variants of ICP have been proposed, affecting all phases of the algorithm from the selection and matching of points to the minimization strategy. We enumerate and classify many of these variants, and evaluate their effect on the speed with which the correct alignment is reached. In order to improve convergence for nearly-ﬂat meshes with small features, such as inscribed surfaces, we introduce a new variant based on uniform sampling of the space of normals. We conclude by proposing a combination of ICP variants optimized for high speed. We demonstrate an implementation that is able to align two range images in a few tens of milliseconds, assuming a good initial guess. This capability has potential application to real-time 3D model acquisition and model-based tracking.},
+	language = {en},
+	urldate = {2020-04-17},
+	booktitle = {Proceedings {Third} {International} {Conference} on 3-{D} {Digital} {Imaging} and {Modeling}},
+	publisher = {IEEE Comput. Soc},
+	author = {Rusinkiewicz, S. and Levoy, M.},
+	year = {2001},
+	pages = {145--152}
+}
+
+@article{runz_maskfusion_2018,
+	title = {{MaskFusion}: {Real}-{Time} {Recognition}, {Tracking} and {Reconstruction} of {Multiple} {Moving} {Objects}},
+	shorttitle = {{MaskFusion}},
+	url = {https://arxiv.org/abs/1804.09194v2},
+	abstract = {We present MaskFusion, a real-time, object-aware, semantic and dynamic RGB-D
+SLAM system that goes beyond traditional systems which output a purely
+geometric map of a static scene. MaskFusion recognizes, segments and assigns
+semantic class labels to different objects in the scene, while tracking and
+reconstructing them even when they move independently from the camera.
+  As an RGB-D camera scans a cluttered scene, image-based instance-level
+semantic segmentation creates semantic object masks that enable real-time
+object recognition and the creation of an object-level representation for the
+world map. Unlike previous recognition-based SLAM systems, MaskFusion does not
+require known models of the objects it can recognize, and can deal with
+multiple independent motions. MaskFusion takes full advantage of using
+instance-level semantic segmentation to enable semantic labels to be fused into
+an object-aware map, unlike recent semantics enabled SLAM systems that perform
+voxel-level semantic segmentation. We show augmented-reality applications that
+demonstrate the unique features of the map output by MaskFusion:
+instance-aware, semantic and dynamic.},
+	language = {en},
+	urldate = {2020-04-13},
+	author = {Rünz, Martin and Buffier, Maud and Agapito, Lourdes},
+	month = apr,
+	year = {2018}
+}
+
+@incollection{leibe_fast_2016,
+	address = {Cham},
+	title = {Fast {Global} {Registration}},
+	volume = {9906},
+	isbn = {978-3-319-46474-9 978-3-319-46475-6},
+	url = {http://link.springer.com/10.1007/978-3-319-46475-6_47},
+	abstract = {We present an algorithm for fast global registration of partially overlapping 3D surfaces. The algorithm operates on candidate matches that cover the surfaces. A single objective is optimized to align the surfaces and disable false matches. The objective is deﬁned densely over the surfaces and the optimization achieves tight alignment with no initialization. No correspondence updates or closest-point queries are performed in the inner loop. An extension of the algorithm can perform joint global registration of many partially overlapping surfaces. Extensive experiments demonstrate that the presented approach matches or exceeds the accuracy of state-of-the-art global registration pipelines, while being at least an order of magnitude faster. Remarkably, the presented approach is also faster than local reﬁnement algorithms such as ICP. It provides the accuracy achieved by well-initialized local reﬁnement algorithms, without requiring an initialization and at lower computational cost.},
+	language = {en},
+	urldate = {2020-04-06},
+	booktitle = {Computer {Vision} – {ECCV} 2016},
+	publisher = {Springer International Publishing},
+	author = {Zhou, Qian-Yi and Park, Jaesik and Koltun, Vladlen},
+	editor = {Leibe, Bastian and Matas, Jiri and Sebe, Nicu and Welling, Max},
+	year = {2016},
+	doi = {10.1007/978-3-319-46475-6_47},
+	note = {Series Title: Lecture Notes in Computer Science},
+	pages = {766--782}
+}
+
+@article{yang_monocular_2019,
+	title = {Monocular {Object} and {Plane} {SLAM} in {Structured} {Environments}},
+	volume = {4},
+	issn = {2377-3766},
+	doi = {10.1109/LRA.2019.2924848},
+	abstract = {In this letter, we present a monocular simultaneous localization and mapping (SLAM) algorithm using high-level object and plane landmarks. The built map is denser, more compact and semantic meaningful compared to feature point based SLAM. We first propose a high-order graphical model to jointly infer the three-dimensional object and layout planes from single images considering occlusions and semantic constraints. The extracted objects and planes are further optimized with camera poses in a unified SLAM framework. Objects and planes can provide more semantic constraints such as Manhattan plane and object supporting relationships compared to points. Experiments on various public and collected datasets, including ICL NUIM and TUM Mono show that our algorithm can improve camera localization accuracy compared to state-of-the-art SLAM, especially when there is no loop closure, and also generate dense maps robustly in many structured environments.},
+	number = {4},
+	journal = {IEEE Robotics and Automation Letters},
+	author = {Yang, Shichao and Scherer, Sebastian},
+	month = oct,
+	year = {2019},
+	note = {Conference Name: IEEE Robotics and Automation Letters},
+	keywords = {Cameras, ICL NUIM, Layout, Object and Plane SLAM, Optimization, Proposals, SLAM, SLAM (robots), Semantic Scene Understanding, Semantics, Simultaneous localization and mapping, TUM Mono, Three-dimensional displays, camera localization accuracy, cameras, dense maps, extracted objects, high-level object, high-order graphical model, layout planes, mobile robots, monocular object, monocular simultaneous localization, object supporting relationships, plane SLAM, plane landmarks, point based SLAM, robot vision, semantic constraints, single images, structured environments, three-dimensional object, unified SLAM framework},
+	pages = {3145--3152}
+}
+
+@inproceedings{lai_unsupervised_2014,
+	title = {Unsupervised feature learning for {3D} scene labeling},
+	doi = {10.1109/ICRA.2014.6907298},
+	abstract = {This paper presents an approach for labeling objects in 3D scenes. We introduce HMP3D, a hierarchical sparse coding technique for learning features from 3D point cloud data. HMP3D classifiers are trained using a synthetic dataset of virtual scenes generated using CAD models from an online database. Our scene labeling system combines features learned from raw RGB-D images and 3D point clouds directly, without any hand-designed features, to assign an object label to every 3D point in the scene. Experiments on the RGB-D Scenes Dataset v.2 demonstrate that the proposed approach can be used to label indoor scenes containing both small tabletop objects and large furniture pieces.},
+	booktitle = {2014 {IEEE} {International} {Conference} on {Robotics} and {Automation} ({ICRA})},
+	author = {Lai, Kevin and Bo, Liefeng and Fox, Dieter},
+	month = may,
+	year = {2014},
+	note = {ISSN: 1050-4729},
+	keywords = {3D point cloud data, 3D scene labeling, CAD, CAD model, Dictionaries, Feature extraction, HMP3D classifiers, Labeling, Matching pursuit algorithms, RGB-D images, RGB-D scenes dataset v.2, Solid modeling, Three-dimensional displays, Videos, furniture pieces, hand-designed feature, hierarchical sparse coding technique, image colour analysis, indoor scenes, learning features, object label, online database, scene labeling system, solid modelling, synthetic dataset, tabletop objects, unsupervised feature learning, unsupervised learning, virtual reality, virtual scenes},
+	pages = {3050--3057}
+}
+
+@inproceedings{park_colored_2017,
+	address = {Venice},
+	title = {Colored {Point} {Cloud} {Registration} {Revisited}},
+	isbn = {978-1-5386-1032-9},
+	url = {http://ieeexplore.ieee.org/document/8237287/},
+	doi = {10.1109/ICCV.2017.25},
+	abstract = {We present an algorithm for aligning two colored point clouds. The key idea is to optimize a joint photometric and geometric objective that locks the alignment along both the normal direction and the tangent plane. We extend a photometric objective for aligning RGB-D images to point clouds, by locally parameterizing the point cloud with a virtual camera. Experiments demonstrate that our algorithm is more accurate and more robust than prior point cloud registration algorithms, including those that utilize color information. We use the presented algorithms to enhance a state-of-the-art scene reconstruction system. The precision of the resulting system is demonstrated on real-world scenes with accurate ground-truth models.},
+	language = {en},
+	urldate = {2020-04-04},
+	booktitle = {2017 {IEEE} {International} {Conference} on {Computer} {Vision} ({ICCV})},
+	publisher = {IEEE},
+	author = {Park, Jaesik and Zhou, Qian-Yi and Koltun, Vladlen},
+	month = oct,
+	year = {2017},
+	pages = {143--152}
+}
+
+@article{kirillov_pointrend_2020,
+	title = {{PointRend}: {Image} {Segmentation} as {Rendering}},
+	shorttitle = {{PointRend}},
+	url = {http://arxiv.org/abs/1912.08193},
+	abstract = {We present a new method for efficient high-quality image segmentation of objects and scenes. By analogizing classical computer graphics methods for efficient rendering with over- and undersampling challenges faced in pixel labeling tasks, we develop a unique perspective of image segmentation as a rendering problem. From this vantage, we present the PointRend (Point-based Rendering) neural network module: a module that performs point-based segmentation predictions at adaptively selected locations based on an iterative subdivision algorithm. PointRend can be flexibly applied to both instance and semantic segmentation tasks by building on top of existing state-of-the-art models. While many concrete implementations of the general idea are possible, we show that a simple design already achieves excellent results. Qualitatively, PointRend outputs crisp object boundaries in regions that are over-smoothed by previous methods. Quantitatively, PointRend yields significant gains on COCO and Cityscapes, for both instance and semantic segmentation. PointRend's efficiency enables output resolutions that are otherwise impractical in terms of memory or computation compared to existing approaches. Code has been made available at https://github.com/facebookresearch/detectron2/tree/master/projects/PointRend.},
+	urldate = {2020-04-04},
+	journal = {arXiv:1912.08193 [cs]},
+	author = {Kirillov, Alexander and Wu, Yuxin and He, Kaiming and Girshick, Ross},
+	month = feb,
+	year = {2020},
+	note = {arXiv: 1912.08193},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition}
+}
+
+@article{claraco_tutorial_nodate,
+	title = {A tutorial on {SE}(3) transformation parameterizations and on-manifold optimization},
+	language = {en},
+	journal = {Technical report},
+	author = {Claraco, Jose Luis Blanco},
+	pages = {66}
+}
+
+@article{mur-artal_orb-slam2_2017,
+	title = {{ORB}-{SLAM2}: an {Open}-{Source} {SLAM} {System} for {Monocular}, {Stereo} and {RGB}-{D} {Cameras}},
+	volume = {33},
+	issn = {1552-3098, 1941-0468},
+	shorttitle = {{ORB}-{SLAM2}},
+	url = {http://arxiv.org/abs/1610.06475},
+	doi = {10.1109/TRO.2017.2705103},
+	abstract = {We present ORB-SLAM2 a complete SLAM system for monocular, stereo and RGB-D cameras, including map reuse, loop closing and relocalization capabilities. The system works in real-time on standard CPUs in a wide variety of environments from small hand-held indoors sequences, to drones flying in industrial environments and cars driving around a city. Our back-end based on bundle adjustment with monocular and stereo observations allows for accurate trajectory estimation with metric scale. Our system includes a lightweight localization mode that leverages visual odometry tracks for unmapped regions and matches to map points that allow for zero-drift localization. The evaluation on 29 popular public sequences shows that our method achieves state-of-the-art accuracy, being in most cases the most accurate SLAM solution. We publish the source code, not only for the benefit of the SLAM community, but with the aim of being an out-of-the-box SLAM solution for researchers in other fields.},
+	number = {5},
+	urldate = {2020-03-25},
+	journal = {IEEE Transactions on Robotics},
+	author = {Mur-Artal, Raul and Tardos, Juan D.},
+	month = oct,
+	year = {2017},
+	note = {arXiv: 1610.06475},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition, Computer Science - Robotics},
+	pages = {1255--1262}
+}
+
+@article{millane_c-blox_2018,
+	title = {C-blox: {A} {Scalable} and {Consistent} {TSDF}-based {Dense} {Mapping} {Approach}},
+	shorttitle = {C-blox},
+	url = {http://arxiv.org/abs/1710.07242},
+	abstract = {In many applications, maintaining a consistent dense map of the environment is key to enabling robotic platforms to perform higher level decision making. Several works have addressed the challenge of creating precise dense 3D maps from visual sensors providing depth information. However, during operation over longer missions, reconstructions can easily become inconsistent due to accumulated camera tracking error and delayed loop closure. Without explicitly addressing the problem of map consistency, recovery from such distortions tends to be difficult. We present a novel system for dense 3D mapping which addresses the challenge of building consistent maps while dealing with scalability. Central to our approach is the representation of the environment as a collection of overlapping TSDF subvolumes. These subvolumes are localized through feature-based camera tracking and bundle adjustment. Our main contribution is a pipeline for identifying stable regions in the map, and to fuse the contributing subvolumes. This approach allows us to reduce map growth while still maintaining consistency. We demonstrate the proposed system on a publicly available dataset and simulation engine, and demonstrate the efficacy of the proposed approach for building consistent and scalable maps. Finally we demonstrate our approach running in real-time on-board a lightweight MAV.},
+	urldate = {2020-03-25},
+	journal = {arXiv:1710.07242 [cs]},
+	author = {Millane, Alexander and Taylor, Zachary and Oleynikova, Helen and Nieto, Juan and Siegwart, Roland and Cadena, César},
+	month = sep,
+	year = {2018},
+	note = {arXiv: 1710.07242},
+	keywords = {Computer Science - Robotics}
+}
+
+@article{dellaert_factor_2017,
+	title = {Factor {Graphs} for {Robot} {Perception}},
+	volume = {6},
+	issn = {1935-8253, 1935-8261},
+	url = {http://www.nowpublishers.com/article/Details/ROB-043},
+	doi = {10.1561/2300000043},
+	language = {en},
+	number = {1-2},
+	urldate = {2020-03-23},
+	journal = {Foundations and Trends in Robotics},
+	author = {Dellaert, Frank and Kaess, Michael},
+	year = {2017},
+	pages = {1--139}
+}
+
+@article{zhou_open3d_2018,
+	title = {{Open3D}: {A} {Modern} {Library} for {3D} {Data} {Processing}},
+	shorttitle = {{Open3D}},
+	url = {http://arxiv.org/abs/1801.09847},
+	abstract = {Open3D is an open-source library that supports rapid development of software that deals with 3D data. The Open3D frontend exposes a set of carefully selected data structures and algorithms in both C++ and Python. The backend is highly optimized and is set up for parallelization. Open3D was developed from a clean slate with a small and carefully considered set of dependencies. It can be set up on different platforms and compiled from source with minimal effort. The code is clean, consistently styled, and maintained via a clear code review mechanism. Open3D has been used in a number of published research projects and is actively deployed in the cloud. We welcome contributions from the open-source community.},
+	urldate = {2020-03-21},
+	journal = {arXiv:1801.09847 [cs]},
+	author = {Zhou, Qian-Yi and Park, Jaesik and Koltun, Vladlen},
+	month = jan,
+	year = {2018},
+	note = {arXiv: 1801.09847},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition, Computer Science - Graphics, Computer Science - Robotics}
+}
+
+@misc{noauthor_3dmatch_nodate,
+	title = {{3DMatch}: {Learning} {Local} {Geometric} {Descriptors} from {RGB}-{D} {Reconstructions}},
+	url = {http://3dmatch.cs.princeton.edu/},
+	urldate = {2020-03-21}
+}
+
+@article{niesner_real-time_2013,
+	title = {Real-time {3D} reconstruction at scale using voxel hashing},
+	volume = {32},
+	issn = {07300301},
+	url = {http://dl.acm.org/citation.cfm?doid=2508363.2508374},
+	doi = {10.1145/2508363.2508374},
+	abstract = {Online 3D reconstruction is gaining newfound interest due to the availability of real-time consumer depth cameras. The basic problem takes live overlapping depth maps as input and incrementally fuses these into a single 3D model. This is challenging particularly when real-time performance is desired without trading quality or scale. We contribute an online system for large and ﬁne scale volumetric reconstruction based on a memory and speed efﬁcient data structure. Our system uses a simple spatial hashing scheme that compresses space, and allows for real-time access and updates of implicit surface data, without the need for a regular or hierarchical grid data structure. Surface data is only stored densely where measurements are observed. Additionally, data can be streamed efﬁciently in or out of the hash table, allowing for further scalability during sensor motion. We show interactive reconstructions of a variety of scenes, reconstructing both ﬁne-grained details and large scale environments. We illustrate how all parts of our pipeline from depth map pre-processing, camera pose estimation, depth map fusion, and surface rendering are performed at real-time rates on commodity graphics hardware. We conclude with a comparison to current state-of-the-art online systems, illustrating improved performance and reconstruction quality.},
+	language = {en},
+	number = {6},
+	urldate = {2020-03-21},
+	journal = {ACM Transactions on Graphics},
+	author = {Nießner, Matthias and Zollhöfer, Michael and Izadi, Shahram and Stamminger, Marc},
+	month = nov,
+	year = {2013},
+	pages = {1--11}
+}
+
+@article{newcombe_kinectfusion_nodate,
+	title = {{KinectFusion}: {Real}-{Time} {Dense} {Surface} {Mapping} and {Tracking}},
+	abstract = {We present a system for accurate real-time mapping of complex and arbitrary indoor scenes in variable lighting conditions, using only a moving low-cost depth camera and commodity graphics hardware. We fuse all of the depth data streamed from a Kinect sensor into a single global implicit surface model of the observed scene in real-time. The current sensor pose is simultaneously obtained by tracking the live depth frame relative to the global model using a coarse-to-ﬁne iterative closest point (ICP) algorithm, which uses all of the observed depth data available. We demonstrate the advantages of tracking against the growing full surface model compared with frame-to-frame tracking, obtaining tracking and mapping results in constant time within room sized scenes with limited drift and high accuracy. We also show both qualitative and quantitative results relating to various aspects of our tracking and mapping system. Modelling of natural scenes, in real-time with only commodity sensor and GPU hardware, promises an exciting step forward in augmented reality (AR), in particular, it allows dense surfaces to be reconstructed in real-time, with a level of detail and robustness beyond any solution yet presented using passive computer vision.},
+	language = {en},
+	author = {Newcombe, Richard A and Davison, Andrew J and Izadi, Shahram and Kohli, Pushmeet and Hilliges, Otmar and Shotton, Jamie and Molyneaux, David and Hodges, Steve and Kim, David and Fitzgibbon, Andrew},
+	pages = {10}
+}
+
+@article{whelan_kintinuous_nodate,
+	title = {Kintinuous: {Spatially} {Extended} {KinectFusion}},
+	abstract = {In this paper we present an extension to the KinectFusion algorithm that permits dense mesh-based mapping of extended scale environments in real-time. This is achieved through (i) altering the original algorithm such that the region of space being mapped by the KinectFusion algorithm can vary dynamically, (ii) extracting a dense point cloud from the regions that leave the KinectFusion volume due to this variation, and, (iii) incrementally adding the resulting points to a triangular mesh representation of the environment. The system is implemented as a set of hierarchical multi-threaded components which are capable of operating in real-time. The architecture facilitates the creation and integration of new modules with minimal impact on the performance on the dense volume tracking and surface reconstruction modules. We provide experimental results demonstrating the system’s ability to map areas considerably beyond the scale of the original KinectFusion algorithm including a two story apartment and an extended sequence taken from a car at night. In order to overcome failure of the iterative closest point (ICP) based odometry in areas of low geometric features we have evaluated the Fast Odometry from Vision (FOVIS) system as an alternative. We provide a comparison between the two approaches where we show a trade off between the reduced drift of the visual odometry approach and the higher local mesh quality of the ICP-based approach. Finally we present ongoing work on incorporating full simultaneous localisation and mapping (SLAM) pose-graph optimisation.},
+	language = {en},
+	author = {Whelan, Thomas and McDonald, John and Kaess, Michael and Fallon, Maurice and Johannsson, Hordur and Leonard, John J},
+	pages = {8}
+}
+
+@article{jatavallabhula_gradslam_2019,
+	title = {{gradSLAM}: {Dense} {SLAM} meets {Automatic} {Differentiation}},
+	shorttitle = {{gradSLAM}},
+	url = {http://arxiv.org/abs/1910.10672},
+	abstract = {The question of "representation" is central in the context of dense simultaneous localization and mapping (SLAM). Newer learning-based approaches have the potential to leverage data or task performance to directly inform the choice of representation. However, learning representations for SLAM has been an open question, because traditional SLAM systems are not end-to-end differentiable.},
+	language = {en},
+	urldate = {2020-03-21},
+	journal = {arXiv:1910.10672 [cs]},
+	author = {Jatavallabhula, Krishna Murthy and Iyer, Ganesh and Paull, Liam},
+	month = oct,
+	year = {2019},
+	note = {arXiv: 1910.10672},
+	keywords = {Computer Science - Computer Vision and Pattern Recognition, Computer Science - Machine Learning, Computer Science - Robotics}
+}
+
+@article{black_unification_1996,
+	title = {On the unification of line processes, outlier rejection, and robust statistics with applications in early vision},
+	volume = {19},
+	issn = {0920-5691, 1573-1405},
+	url = {http://link.springer.com/10.1007/BF00131148},
+	doi = {10.1007/BF00131148},
+	abstract = {The modeling of spatial discontinuities for problems such as surface recovery, segmentation, image reconstruction, and optical ﬂow has been intensely studied in computer vision. While “line-process” models of discontinuities have received a great deal of attention, there has been recent interest in the use of robust statistical techniques to account for discontinuities. This paper uniﬁes the two approaches. To achieve this we generalize the notion of a “line process” to that of an analog “outlier process” and show how a problem formulated in terms of outlier processes can be viewed in terms of robust statistics. We also characterize a class of robust statistical problems for which an equivalent outlier-process formulation exists and give a straightforward method for converting a robust estimation problem into an outlier-process formulation. We show how prior assumptions about the spatial structure of outliers can be expressed as constraints on the recovered analog outlier processes and how traditional continuation methods can be extended to the explicit outlier-process formulation. These results indicate that the outlierprocesses approach provides a general framework which subsumes the traditional line-process approaches as well as a wide class of robust estimation problems. Examples in surface reconstruction, image segmentation, and optical ﬂow are presented to illustrate the use of outlier processes and to show how the relationship between outlier processes and robust statistics can be exploited. An appendix provides a catalog of common robust error norms and their equivalent outlier-process formulations.},
+	language = {en},
+	number = {1},
+	urldate = {2020-03-21},
+	journal = {International Journal of Computer Vision},
+	author = {Black, Michael J. and Rangarajan, Anand},
+	month = jul,
+	year = {1996},
+	pages = {57--91}
+}
+
+@article{czarnowski_deepfactors_2020,
+	title = {{DeepFactors}: {Real}-{Time} {Probabilistic} {Dense} {Monocular} {SLAM}},
+	volume = {5},
+	issn = {2377-3766, 2377-3774},
+	shorttitle = {{DeepFactors}},
+	url = {https://ieeexplore.ieee.org/document/8954779/},
+	doi = {10.1109/LRA.2020.2965415},
+	abstract = {The ability to estimate rich geometry and camera motion from monocular imagery is fundamental to future interactive robotics and augmented reality applications. Different approaches have been proposed that vary in scene geometry representation (sparse landmarks, dense maps), the consistency metric used for optimising the multi-view problem, and the use of learned priors. We present a SLAM system that uniﬁes these methods in a probabilistic framework while still maintaining real-time performance. This is achieved through the use of a learned compact depth map representation and reformulating three different types of errors: photometric, reprojection and geometric, which we make use of within standard factor graph software. We evaluate our system on trajectory estimation and depth reconstruction on real-world sequences and present various examples of estimated dense geometry.},
+	language = {en},
+	number = {2},
+	urldate = {2020-03-21},
+	journal = {IEEE Robotics and Automation Letters},
+	author = {Czarnowski, Jan and Laidlow, Tristan and Clark, Ronald and Davison, Andrew J.},
+	month = apr,
+	year = {2020},
+	pages = {721--728}
+}
+
+@inproceedings{sunderhauf_switchable_2012,
+	title = {Switchable {Constraints} for {Robust} {Pose} {Graph} {SLAM}},
+	abstract = {c○2012 IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other uses, in any current or future media, including reprinting/republishing this material for advertising or promotional purposes, creating},
+	booktitle = {In {Proc}. of {IEEE} {International} {Conference} on {Intelligent} {Robots} and {Systems} ({IROS}},
+	author = {Sünderhauf, Niko and Protzel, Peter},
+	year = {2012}
+}
+
+@inproceedings{sungjoon_choi_robust_2015,
+	address = {Boston, MA, USA},
+	title = {Robust reconstruction of indoor scenes},
+	isbn = {978-1-4673-6964-0},
+	url = {http://ieeexplore.ieee.org/document/7299195/},
+	doi = {10.1109/CVPR.2015.7299195},
+	abstract = {We present an approach to indoor scene reconstruction from RGB-D video. The key idea is to combine geometric registration of scene fragments with robust global optimization based on line processes. Geometric registration is error-prone due to sensor noise, which leads to aliasing of geometric detail and inability to disambiguate different surfaces in the scene. The presented optimization approach disables erroneous geometric alignments even when they signiﬁcantly outnumber correct ones. Experimental results demonstrate that the presented approach substantially increases the accuracy of reconstructed scene models.},
+	language = {en},
+	urldate = {2020-03-21},
+	booktitle = {2015 {IEEE} {Conference} on {Computer} {Vision} and {Pattern} {Recognition} ({CVPR})},
+	publisher = {IEEE},
+	author = {{Sungjoon Choi} and Zhou, Qian-Yi and Koltun, Vladlen},
+	month = jun,
+	year = {2015},
+	pages = {5556--5565}
+}

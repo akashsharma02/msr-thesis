@@ -254,6 +254,21 @@
   language = {en}
 }
 
+@inproceedings{curlessVolumetricMethodBuilding1996,
+  title = {A Volumetric Method for Building Complex Models from Range Images},
+  booktitle = {Proceedings of the 23rd Annual Conference on {{Computer}} Graphics and Interactive Techniques  - {{SIGGRAPH}} '96},
+  author = {Curless, Brian and Levoy, Marc},
+  year = {1996},
+  pages = {303--312},
+  publisher = {{ACM Press}},
+  address = {{Not Known}},
+  doi = {10.1145/237170.237269},
+  abstract = {A number of techniques have been developed for reconstructing surfaces by integrating groups of aligned range images. A desirable set of properties for such algorithms includes: incremental updating, representation of directional uncertainty, the ability to fill gaps in the reconstruction, and robustness in the presence of outliers. Prior algorithms possess subsets of these properties. In this paper, we present a volumetric method for integrating range images that possesses all of these properties.},
+  file = {/home/akashsharma/Zotero/storage/DKHQAZVH/Curless and Levoy - 1996 - A volumetric method for building complex models fr.pdf},
+  isbn = {978-0-89791-746-9},
+  language = {en}
+}
+
 @article{czarnowskiDeepFactorsRealTimeProbabilistic2020,
   title = {{{DeepFactors}}: {{Real}}-{{Time Probabilistic Dense Monocular SLAM}}},
   shorttitle = {{{DeepFactors}}},
@@ -279,6 +294,14 @@
   journal = {ACM Transactions on Graphics 2017 (TOG)}
 }
 
+@article{davisAlgorithm8xxCOLAMD,
+  title = {Algorithm 8xx: {{COLAMD}}, a Column Approximate Minimum Degree Ordering Algorithm},
+  author = {Davis, Timothy A and Larimore, Stefan I and Gilbert, John R and Ng, Esmond G},
+  pages = {5},
+  file = {/home/akashsharma/Zotero/storage/HTJM9IAE/Davis et al. - Algorithm 8xx COLAMD, a column approximate minimu.pdf},
+  language = {en}
+}
+
 @misc{DeepEquilibriumModels,
   title = {Deep Equilibrium Models - {{Google Search}}},
   file = {/home/akashsharma/Zotero/storage/N43ULXPD/search.html},
@@ -297,6 +320,23 @@
   journal = {Foundations and Trends in Robotics},
   language = {en},
   number = {1-2}
+}
+
+@article{dellaertSquareRootSAM2006,
+  title = {Square {{Root SAM}}: {{Simultaneous Localization}} and {{Mapping}} via {{Square Root Information Smoothing}}},
+  shorttitle = {Square {{Root SAM}}},
+  author = {Dellaert, Frank and Kaess, Michael},
+  year = {2006},
+  month = dec,
+  volume = {25},
+  pages = {1181--1203},
+  issn = {0278-3649, 1741-3176},
+  doi = {10.1177/0278364906072768},
+  abstract = {Solving the SLAM problem is one way to enable a robot to explore, map, and navigate in a previously unknown environment. We investigate smoothing approaches as a viable alternative to extended Kalman filter-based solutions to the problem. In particular, we look at approaches that factorize either the associated information matrix or the measurement Jacobian into square root form. Such techniques have several significant advantages over the EKF: they are faster yet exact, they can be used in either batch or incremental mode, are better equipped to deal with non-linear process and measurement models, and yield the entire robot trajectory, at lower cost for a large class of SLAM problems. In addition, in an indirect but dramatic way, column ordering heuristics automatically exploit the locality inherent in the geographic nature of the SLAM problem. In this paper we present the theory underlying these methods, along with an interpretation of factorization in terms of the graphical model associated with the SLAM problem. We present both simulation results and actual SLAM experiments in large-scale environments that underscore the potential of these methods as an alternative to EKF-based approaches.},
+  file = {/home/akashsharma/Zotero/storage/P83GUFNF/Dellaert and Kaess - 2006 - Square Root SAM Simultaneous Localization and Map.pdf},
+  journal = {The International Journal of Robotics Research},
+  language = {en},
+  number = {12}
 }
 
 @article{diebelRepresentingAttitudeEuler,
@@ -338,6 +378,15 @@
   journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
   language = {en},
   number = {3}
+}
+
+@article{engelLSDSLAMLargeScaleDirect,
+  title = {{{LSD}}-{{SLAM}}: {{Large}}-{{Scale Direct Monocular SLAM}}},
+  author = {Engel, Jakob and Schops, Thomas and Cremers, Daniel},
+  pages = {16},
+  abstract = {We propose a direct (feature-less) monocular SLAM algorithm which, in contrast to current state-of-the-art regarding direct methods, allows to build large-scale, consistent maps of the environment. Along with highly accurate pose estimation based on direct image alignment, the 3D environment is reconstructed in real-time as pose-graph of keyframes with associated semi-dense depth maps. These are obtained by filtering over a large number of pixelwise small-baseline stereo comparisons. The explicitly scale-drift aware formulation allows the approach to operate on challenging sequences including large variations in scene scale. Major enablers are two key novelties: (1) a novel direct tracking method which operates on sim(3), thereby explicitly detecting scale-drift, and (2) an elegant probabilistic solution to include the effect of noisy depth values into tracking. The resulting direct monocular SLAM system runs in real-time on a CPU.},
+  file = {/home/akashsharma/Zotero/storage/A8LX436A/Engel et al. - LSD-SLAM Large-Scale Direct Monocular SLAM.pdf},
+  language = {en}
 }
 
 @article{estevesLearningEquivariantRepresentations2020,
@@ -623,6 +672,23 @@
   language = {en}
 }
 
+@article{kaessISAM2IncrementalSmoothing2012,
+  title = {{{iSAM2}}: {{Incremental}} Smoothing and Mapping Using the {{Bayes}} Tree},
+  shorttitle = {{{iSAM2}}},
+  author = {Kaess, Michael and Johannsson, Hordur and Roberts, Richard and Ila, Viorela and Leonard, John J and Dellaert, Frank},
+  year = {2012},
+  month = feb,
+  volume = {31},
+  pages = {216--235},
+  issn = {0278-3649, 1741-3176},
+  doi = {10.1177/0278364911430419},
+  abstract = {We present a novel data structure, the Bayes tree, that provides an algorithmic foundation enabling a better understanding of existing graphical model inference algorithms and their connection to sparse matrix factorization methods. Similar to a clique tree, a Bayes tree encodes a factored probability density, but unlike the clique tree it is directed and maps more naturally to the square root information matrix of the simultaneous localization and mapping (SLAM) problem. In this paper, we highlight three insights provided by our new data structure. First, the Bayes tree provides a better understanding of the matrix factorization in terms of probability densities. Second, we show how the fairly abstract updates to a matrix factorization translate to a simple editing of the Bayes tree and its conditional densities. Third, we apply the Bayes tree to obtain a completely novel algorithm for sparse nonlinear incremental optimization, named iSAM2, which achieves improvements in efficiency through incremental variable re-ordering and fluid relinearization, eliminating the need for periodic batch steps. We analyze various properties of iSAM2 in detail, and show on a range of real and simulated datasets that our algorithm compares favorably with other recent mapping algorithms in both quality and efficiency.},
+  file = {/home/akashsharma/Zotero/storage/3I3B48GT/Kaess et al. - 2012 - iSAM2 Incremental smoothing and mapping using the.pdf},
+  journal = {The International Journal of Robotics Research},
+  language = {en},
+  number = {2}
+}
+
 @incollection{kahlerRealTimeLargeScaleDense2016,
   title = {Real-{{Time Large}}-{{Scale Dense 3D Reconstruction}} with {{Loop Closure}}},
   booktitle = {Computer {{Vision}} \textendash{} {{ECCV}} 2016},
@@ -669,6 +735,22 @@
   journal = {arXiv:1912.08193 [cs]},
   keywords = {Computer Science - Computer Vision and Pattern Recognition},
   primaryclass = {cs}
+}
+
+@inproceedings{kleinParallelTrackingMapping2007,
+  title = {Parallel {{Tracking}} and {{Mapping}} for {{Small AR Workspaces}}},
+  booktitle = {2007 6th {{IEEE}} and {{ACM International Symposium}} on {{Mixed}} and {{Augmented Reality}}},
+  author = {Klein, Georg and Murray, David},
+  year = {2007},
+  month = nov,
+  pages = {1--10},
+  publisher = {{IEEE}},
+  address = {{Nara, Japan}},
+  doi = {10.1109/ISMAR.2007.4538852},
+  abstract = {This paper presents a method of estimating camera pose in an unknown scene. While this has previously been attempted by adapting SLAM algorithms developed for robotic exploration, we propose a system specifically designed to track a hand-held camera in a small AR workspace. We propose to split tracking and mapping into two separate tasks, processed in parallel threads on a dual-core computer: one thread deals with the task of robustly tracking erratic hand-held motion, while the other produces a 3D map of point features from previously observed video frames. This allows the use of computationally expensive batch optimisation techniques not usually associated with real-time operation: The result is a system that produces detailed maps with thousands of landmarks which can be tracked at frame-rate, with an accuracy and robustness rivalling that of state-of-the-art model-based systems.},
+  file = {/home/akashsharma/Zotero/storage/DE37B53L/Klein and Murray - 2007 - Parallel Tracking and Mapping for Small AR Workspa.pdf},
+  isbn = {978-1-4244-1749-0},
+  language = {en}
 }
 
 @inproceedings{laiUnsupervisedFeatureLearning2014,
@@ -964,6 +1046,22 @@
   language = {en}
 }
 
+@article{prisacariuInfiniTAMV3Framework2017,
+  title = {{{InfiniTAM}} v3: {{A Framework}} for {{Large}}-{{Scale 3D Reconstruction}} with {{Loop Closure}}},
+  shorttitle = {{{InfiniTAM}} V3},
+  author = {Prisacariu, Victor Adrian and K{\"a}hler, Olaf and Golodetz, Stuart and Sapienza, Michael and Cavallari, Tommaso and Torr, Philip H. S. and Murray, David W.},
+  year = {2017},
+  month = aug,
+  abstract = {Volumetric models have become a popular representation for 3D scenes in recent years. One breakthrough leading to their popularity was KinectFusion, which focuses on 3D reconstruction using RGB-D sensors. However, monocular SLAM has since also been tackled with very similar approaches. Representing the reconstruction volumetrically as a TSDF leads to most of the simplicity and efficiency that can be achieved with GPU implementations of these systems. However, this representation is memory-intensive and limits applicability to small-scale reconstructions. Several avenues have been explored to overcome this. With the aim of summarizing them and providing for a fast, flexible 3D reconstruction pipeline, we propose a new, unifying framework called InfiniTAM. The idea is that steps like camera tracking, scene representation and integration of new data can easily be replaced and adapted to the user's needs. This report describes the technical implementation details of InfiniTAM v3, the third version of our InfiniTAM system. We have added various new features, as well as making numerous enhancements to the low-level code that significantly improve our camera tracking performance. The new features that we expect to be of most interest are (i) a robust camera tracking module; (ii) an implementation of Glocker et al.'s keyframe-based random ferns camera relocaliser; (iii) a novel approach to globally-consistent TSDF-based reconstruction, based on dividing the scene into rigid submaps and optimising the relative poses between them; and (iv) an implementation of Keller et al.'s surfel-based reconstruction approach.},
+  archiveprefix = {arXiv},
+  eprint = {1708.00783},
+  eprinttype = {arxiv},
+  file = {/home/akashsharma/Zotero/storage/7N93CPJJ/Prisacariu et al. - 2017 - InfiniTAM v3 A Framework for Large-Scale 3D Recon.pdf;/home/akashsharma/Zotero/storage/CBY2YBJN/1708.html},
+  journal = {arXiv:1708.00783 [cs]},
+  keywords = {Computer Science - Computer Vision and Pattern Recognition},
+  primaryclass = {cs}
+}
+
 @article{quenzelPhotometricConsistencyGradientbased2020,
   title = {Beyond {{Photometric Consistency}}: {{Gradient}}-Based {{Dissimilarity}} for {{Improving Visual Odometry}} and {{Stereo Matching}}},
   shorttitle = {Beyond {{Photometric Consistency}}},
@@ -993,6 +1091,22 @@
   journal = {Proceedings of the IEEE},
   keywords = {balls-in-urns system,coin-tossing,discrete Markov chains,ergodic models,hidden Markov models,Hidden Markov models,hidden states,left-right models,Markov processes,probabilistic function,speech recognition,Speech recognition,Tutorial},
   number = {2}
+}
+
+@article{renFasterRCNNRealTime2016,
+  title = {Faster {{R}}-{{CNN}}: {{Towards Real}}-{{Time Object Detection}} with {{Region Proposal Networks}}},
+  shorttitle = {Faster {{R}}-{{CNN}}},
+  author = {Ren, Shaoqing and He, Kaiming and Girshick, Ross and Sun, Jian},
+  year = {2016},
+  month = jan,
+  abstract = {State-of-the-art object detection networks depend on region proposal algorithms to hypothesize object locations. Advances like SPPnet and Fast R-CNN have reduced the running time of these detection networks, exposing region proposal computation as a bottleneck. In this work, we introduce a Region Proposal Network (RPN) that shares full-image convolutional features with the detection network, thus enabling nearly cost-free region proposals. An RPN is a fully convolutional network that simultaneously predicts object bounds and objectness scores at each position. The RPN is trained end-to-end to generate high-quality region proposals, which are used by Fast R-CNN for detection. We further merge RPN and Fast R-CNN into a single network by sharing their convolutional features---using the recently popular terminology of neural networks with 'attention' mechanisms, the RPN component tells the unified network where to look. For the very deep VGG-16 model, our detection system has a frame rate of 5fps (including all steps) on a GPU, while achieving state-of-the-art object detection accuracy on PASCAL VOC 2007, 2012, and MS COCO datasets with only 300 proposals per image. In ILSVRC and COCO 2015 competitions, Faster R-CNN and RPN are the foundations of the 1st-place winning entries in several tracks. Code has been made publicly available.},
+  archiveprefix = {arXiv},
+  eprint = {1506.01497},
+  eprinttype = {arxiv},
+  file = {/home/akashsharma/Zotero/storage/DA8R32S9/Ren et al. - 2016 - Faster R-CNN Towards Real-Time Object Detection w.pdf;/home/akashsharma/Zotero/storage/HZZ4P2TW/1506.html},
+  journal = {arXiv:1506.01497 [cs]},
+  keywords = {Computer Science - Computer Vision and Pattern Recognition},
+  primaryclass = {cs}
 }
 
 @article{rosinol3DDynamicScene2020,
@@ -1322,6 +1436,23 @@
   year = {2005},
   publisher = {{The MIT Press}},
   isbn = {978-0-262-20162-9}
+}
+
+@incollection{triggsBundleAdjustmentModern2000,
+  title = {Bundle {{Adjustment}} \textemdash{} {{A Modern Synthesis}}},
+  booktitle = {Vision {{Algorithms}}: {{Theory}} and {{Practice}}},
+  author = {Triggs, Bill and McLauchlan, Philip F. and Hartley, Richard I. and Fitzgibbon, Andrew W.},
+  editor = {Goos, Gerhard and Hartmanis, Juris and {van Leeuwen}, Jan and Triggs, Bill and Zisserman, Andrew and Szeliski, Richard},
+  year = {2000},
+  volume = {1883},
+  pages = {298--372},
+  publisher = {{Springer Berlin Heidelberg}},
+  address = {{Berlin, Heidelberg}},
+  doi = {10.1007/3-540-44480-7_21},
+  abstract = {This paper is a survey of the theory and methods of photogrammetric bundle adjustment, aimed at potential implementors in the computer vision community. Bundle adjustment is the problem of refining a visual reconstruction to produce jointly optimal structure and viewing parameter estimates. Topics covered include: the choice of cost function and robustness; numerical optimization including sparse Newton methods, linearly convergent approximations, updating and recursive methods; gauge (datum) invariance; and quality control. The theory is developed for general robust cost functions rather than restricting attention to traditional nonlinear least squares.},
+  file = {/home/akashsharma/Zotero/storage/FB7JPG5Z/Triggs et al. - 2000 - Bundle Adjustment — A Modern Synthesis.pdf},
+  isbn = {978-3-540-67973-8 978-3-540-44480-0},
+  language = {en}
 }
 
 @article{tungLearningSpatialCommon2019,
