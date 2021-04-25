@@ -106,25 +106,6 @@ It must be noted that the $p$s are a subset of pixels with valid object-level da
 
 The energy function in equation \ref{eq:1} is minimized using the Gauss-Newton algorithm. We implement the minimization in a coarse to fine scheme using an image pyramid, on the GPU in parallel since each pixel acts independently in the energy function using \textit{reduction} with appropriate thread conflict handling as described in \cite{dongGPUAcceleratedRobust2019}.
 
-\begin{figure}[t!]
-    \centering
-    \subfloat{\includegraphics[width=0.5\linewidth]{figs/frame-000218.color.png}}
-    \subfloat{\includegraphics[width=0.5\linewidth]{figs/scene13-objectsonly.png}}
-    \caption{Qualitative foreground object reconstruction results on \emph{RGB-D Scene 13} sequence.}
-    \vspace*{-1em}
-    \label{fig:rgbd_scene13}
-\end{figure}
-
-\begin{figure*}[t!]
-    \centering
-    \subfloat{\includegraphics[align=c,width=0.3\linewidth]{figs/frame-000293.color.png}}
-    \subfloat{\includegraphics[align=c,width=0.3\linewidth]{figs/mask-fusion-scene12.png}}
-    \subfloat{\includegraphics[align=c,width=0.26\linewidth]{figs/scene12.png}}
-    \vspace{-2mm}
-    \caption{Reconstructed small indoor scene \emph{RGB-D Scene 12}. We first show an example input \textit{RGB} frame followed by a top-down view of the reconstruction from \textit{MaskFusion}. This is followed by result from our pipeline. Note that in our reconstruction background walls and floor are filtered out. }
-    \vspace*{-1em}
-    \label{fig:rgbd_scene12}
-\end{figure*}
 
 
 \subsection{Object instance segmentation and association} \label{subsec: segmentation}
