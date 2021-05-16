@@ -846,6 +846,19 @@
   language = {en}
 }
 
+@inproceedings{loiannoVisualInertialOdometry2016,
+  title = {Visual Inertial Odometry for Quadrotors on {{SE}}(3)},
+  booktitle = {2016 {{IEEE International Conference}} on {{Robotics}} and {{Automation}} ({{ICRA}})},
+  author = {Loianno, Giuseppe and Watterson, Michael and Kumar, Vijay},
+  year = {2016},
+  month = may,
+  pages = {1544--1551},
+  doi = {10.1109/ICRA.2016.7487292},
+  abstract = {The combination of on-board sensors measurements with different statistical characteristics can be employed in robotics for localization and control, especially in GPS-denied environments. In particular, most aerial vehicles are packaged with low cost sensors, important for aerial robotics, such as camera, a gyroscope, and an accelerometer. In this work, we develop a visual inertial odometry system based on the Unscented Kalman Filter (UKF) acting on the Lie group SE(3), such to obtain an unique, singularity-free representation of a rigid body pose. We model this pose with the Lie group SE(3) and model the noise on the corresponding Lie algebra. Moreover, we extend the concepts used in the standard UKF formulation, such as state uncertainty and modeling, to correctly incorporate elements that do not belong to an Euclidean space such as the Lie group members. In this analysis, we use the parallel transport, which requires us to explicitly consider SE(3) as representing rigid bodies though the use of the affine connection. We present experimental results to show the effectiveness of the proposed approach for state estimation of a quadrotor platform.},
+  file = {/home/akashsharma/Zotero/storage/7M3ZYZHX/Loianno et al. - 2016 - Visual inertial odometry for quadrotors on SE(3).pdf;/home/akashsharma/Zotero/storage/S2ZWJZ68/7487292.html},
+  keywords = {Algebra,Kalman filters,Kinematics,Manifolds,Mathematical model,Quaternions,Sensors}
+}
+
 @article{mccormacFusionVolumetricObjectLevel2018,
   title = {Fusion++: {{Volumetric Object}}-{{Level SLAM}}},
   shorttitle = {Fusion++},
@@ -1062,6 +1075,23 @@
   primaryclass = {cs}
 }
 
+@article{qinVINSMonoRobustVersatile2018,
+  title = {{{VINS}}-{{Mono}}: {{A Robust}} and {{Versatile Monocular Visual}}-{{Inertial State Estimator}}},
+  shorttitle = {{{VINS}}-{{Mono}}},
+  author = {Qin, Tong and Li, Peiliang and Shen, Shaojie},
+  year = {2018},
+  month = aug,
+  volume = {34},
+  pages = {1004--1020},
+  issn = {1941-0468},
+  doi = {10.1109/TRO.2018.2853729},
+  abstract = {One camera and one low-cost inertial measurement unit (IMU) form a monocular visual-inertial system (VINS), which is the minimum sensor suite (in size, weight, and power) for the metric six degrees-of-freedom (DOF) state estimation. In this paper, we present VINS-Mono: a robust and versatile monocular visual-inertial state estimator. Our approach starts with a robust procedure for estimator initialization. A tightly coupled, nonlinear optimization-based method is used to obtain highly accurate visual-inertial odometry by fusing preintegrated IMU measurements and feature observations. A loop detection module, in combination with our tightly coupled formulation, enables relocalization with minimum computation. We additionally perform 4-DOF pose graph optimization to enforce the global consistency. Furthermore, the proposed system can reuse a map by saving and loading it in an efficient way. The current and previous maps can be merged together by the global pose graph optimization. We validate the performance of our system on public datasets and real-world experiments and compare against other state-of-the-art algorithms. We also perform an onboard closed-loop autonomous flight on the microaerial-vehicle platform and port the algorithm to an iOS-based demonstration. We highlight that the proposed work is a reliable, complete, and versatile system that is applicable for different applications that require high accuracy in localization. We open source our implementations for both PCs (https://github.com/HKUST-Aerial-Robotics/VINS-Mono) and iOS mobile devices ( https://github.com/HKUST-Aerial-Robotics/VINS-Mobile).},
+  file = {/home/akashsharma/Zotero/storage/7QQN59HG/Qin et al. - 2018 - VINS-Mono A Robust and Versatile Monocular Visual.pdf;/home/akashsharma/Zotero/storage/SE28NTAZ/8421746.html},
+  journal = {IEEE Transactions on Robotics},
+  keywords = {Cameras,Feature extraction,Monocular visual-inertial systems (VINSs),Optimization,Robot sensing systems,Robustness,sensor fusion,simultaneous localization and mapping,state estimation,Visualization},
+  number = {4}
+}
+
 @article{quenzelPhotometricConsistencyGradientbased2020,
   title = {Beyond {{Photometric Consistency}}: {{Gradient}}-Based {{Dissimilarity}} for {{Improving Visual Odometry}} and {{Stereo Matching}}},
   shorttitle = {Beyond {{Photometric Consistency}}},
@@ -1091,6 +1121,16 @@
   journal = {Proceedings of the IEEE},
   keywords = {balls-in-urns system,coin-tossing,discrete Markov chains,ergodic models,hidden Markov models,Hidden Markov models,hidden states,left-right models,Markov processes,probabilistic function,speech recognition,Speech recognition,Tutorial},
   number = {2}
+}
+
+@inproceedings{redmonYouOnlyLook2016,
+  title = {You {{Only Look Once}}: {{Unified}}, {{Real}}-{{Time Object Detection}}},
+  shorttitle = {You {{Only Look Once}}},
+  booktitle = {Proceedings of the {{IEEE Conference}} on {{Computer Vision}} and {{Pattern Recognition}}},
+  author = {Redmon, Joseph and Divvala, Santosh and Girshick, Ross and Farhadi, Ali},
+  year = {2016},
+  pages = {779--788},
+  file = {/home/akashsharma/Zotero/storage/6H3XASYF/Redmon et al. - 2016 - You Only Look Once Unified, Real-Time Object Dete.pdf;/home/akashsharma/Zotero/storage/UCL8QHH3/Redmon_You_Only_Look_CVPR_2016_paper.html}
 }
 
 @article{renFasterRCNNRealTime2016,

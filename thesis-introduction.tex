@@ -26,11 +26,11 @@ Typically, when the map is modeled as a collection of landmarks $ \Lc = \{\ell_m
 \end{align}
 % Note, that the above problem assumes known \emph{data association} between measurements $\zv_n$ of landmark $\ell_{\beta_n}$ at a robot pose $\xv_{\alpha_n}$as $\Dc := \{(\alpha_n, \beta_n)\}_{n=1}^{N}$ \cite{bowmanProbabilisticDataAssociation2017}.
 
-In reality, however, a SLAM framework for a robot needs to deal with raw sensor measurements. Therefore, typically the system is divided into two parts: \emph{front-end} and \emph{back-end}. The front-end is dedicated to data pre-processing, data association and feeds into the back-end, dedicated to the optimization that results in the best estimate of robot state and landmarks.
+In reality, however, a SLAM framework for a robot needs to deal with raw sensor measurements. Therefore, typically the system is divided into two parts: \emph{front-end} and \emph{back-end}. The front-end is dedicated to data pre-processing, data association and feeds into the back-end dedicated to the optimization that results in the best estimate of robot state and landmarks.
 
 \section{Semantics in SLAM}
 
-For autonomous robots in the near future, to work in the real world, advanced interpretation of the environment is necessary. For workloads ranging from semantic 3D reconstruction and path planning, to active interaction with the environment (see Figure~\ref{fig:spot-mini}). These workloads require not only geometric perception including robot localization and map reconstruction, but also semantic and compositional understanding of scenes.
+For autonomous robots in the near future, to work in the real world advanced interpretation of the environment is necessary. For workloads ranging from semantic 3D reconstruction and path planning to active interaction with the environment (see Figure~\ref{fig:spot-mini}) robotic systems require not only geometric perception including robot localization and map reconstruction, but also semantic and compositional understanding of scenes.
 
 \begin{figure}[htpb]
     \centering
@@ -39,28 +39,25 @@ For autonomous robots in the near future, to work in the real world, advanced in
     \label{fig:spot-mini}
 \end{figure}
 
-In recent years, geometry-based SLAM has achieved high levels of performance in \textit{experimental setups} for localization tasks. Many variants of SLAM algorithms, from ORB-SLAM~\cite{mur-artalORBSLAM2OpenSourceSLAM2017} to Direct Sparse Odometry (DSO)~\cite{engelDirectSparseOdometry2018}, can now run in real-time with high trajectory accuracy.
-However, they are in general limited by the \emph{static-world} assumption and low-level scene representation as sparse 3D feature points, and thus cannot distill high-level information (semantic understanding) in scenes and adjust to structured environmental changes.
+In recent years, geometry-based SLAM has achieved high levels of performance in \textit{experimental setups} for localization tasks. Many variants of SLAM algorithms, from ORB-SLAM~\cite{mur-artalORBSLAM2OpenSourceSLAM2017} to Direct Sparse Odometry (DSO)~\cite{engelDirectSparseOdometry2018}, can now run in real-time with high trajectory accuracy. However, they are in general limited by the \emph{static-world} assumption and low-level scene representation as sparse 3D feature points, and thus cannot distill high-level information also known as semantic understanding in scenes and adjust to structured environmental changes.
 
-On the other hand, with progress in deep learning, near real-time semantic perception is achievable powered by efficient Deep Neural Networks (DNNs).
-Researchers have started to switch to semantic SLAM taking advantage of off-the-shelf solutions; pioneering research includes SLAM++~\cite{salas-morenoSLAMSimultaneousLocalisation2013}, Fusion++~\cite{mccormacFusionVolumetricObjectLevel2018}, and MaskFusion~\cite{runzMaskFusionRealTimeRecognition2018}. These initial attempts take into consideration semantic segmentation, but typically simply attach DNN frontends to existing SLAM frameworks in an ad hoc fashion. Implementation-wise, they require high-end machines to achieve near real-time performance, or are not available to the community.
+On the other hand, with progress in deep learning, near real-time semantic perception is achievable powered by efficient Deep Neural Networks (DNNs). There has been explosive progress in object detection and instance segmentation over the past 5 years \cite{renFasterRCNNRealTime2016, heMaskRCNN2018, redmonYouOnlyLook2016} which is underutilized in SLAM. Researchers have started to switch to semantic SLAM taking advantage of off-the-shelf solutions; pioneering research includes SLAM++~\cite{salas-morenoSLAMSimultaneousLocalisation2013}, Fusion++~\cite{mccormacFusionVolumetricObjectLevel2018}, and MaskFusion~\cite{runzMaskFusionRealTimeRecognition2018}. These initial attempts take into consideration semantic segmentation, but typically simply attach DNN frontends to existing SLAM frameworks in an ad hoc fashion. Implementation-wise, they require high-end machines to achieve near real-time performance, or are not available to the community.
 
-\section{Thesis}
-In this dissertation, I present a Compositional and Scalable Object SLAM system that represents an environment as a posegraph of persistent objects. I describe a system, that incrementally improves each associated persistent object landmarks through RGB-D Fusion, and optimizes the landmarks and the robot trajectory simultaneously to accurately represent an environment. (see Figure~\ref{fig:objectsandscene}).
+\section{Contributions}
 
-In implementation, this work fully exploits the power of the modern GPU-based reconstruction pipeline~\cite{dongGPUAcceleratedRobust2019} and object detection frameworks~\cite{kirillovPointRendImageSegmentation2020}, to design an efficient architecture for data exchange without sacrificing the ease of system configuration and build.
-
-\begin{figure}[t!]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=\linewidth]{figs/teaser.pdf}\vspace{-1cm}
-%    \includegraphics[width=\linewidth]{figures/scene14.png}
     \caption{Reconstruction of \textit{fr2\_xyz} sequence from \emph{tum rgbd} dataset. Our pipeline can reconstruct both camera trajectory and object models in the scene.}
     \label{fig:objectsandscene}
 \end{figure}
 
-\subsection{Contributions}
+In this thesis, I present a Compositional and Scalable Object SLAM system that represents an environment as a posegraph of persistent objects. I describe a system, that incrementally improves each associated persistent object landmarks through RGB-D Fusion, and optimizes the landmarks and the robot trajectory simultaneously to accurately represent an environment. (see Figure~\ref{fig:objectsandscene}).
 
-This thesis presents the following core contributions:
+In implementation, this work fully exploits the power of the modern GPU-based reconstruction pipeline~\cite{dongGPUAcceleratedRobust2019} and object detection frameworks~\cite{kirillovPointRendImageSegmentation2020}, to design an efficient architecture for data exchange without sacrificing the ease of system configuration and build.
+
+
+This document presents the following core contributions:
 
 \begin{enumerate}
     \item A compositional volumetric rendering method that selects objects of interest and reduces memory footprint;
@@ -70,5 +67,10 @@ This thesis presents the following core contributions:
 
 \section{Organization}
 
-\todo{Write in the end}
+In Chapter~\ref{chap:background} we first review some requisite preliminaries and concepts in SLAM, and dense 3D reconstruction.
 
+\noindent In Chapter~\ref{chap:object-slam} we introduce the core SLAM system that forms the major contribution of this thesis. This chapter presents some of the improvements made in the SLAM system with object landmarks, and delineates each component in the pipeline.
+
+\noindent In Chapter~\ref{chap:experiments}, we present some qualitative and quantitative experiments and discussion by comparing against existing state-of-the-art geometric SLAM systems and a few dense semantic SLAM systems.
+
+\noindent Finally, in Chapter~\ref{chap:conclusion}, we conclude the thesis, with some limitations and future directions of research work to improve SLAM systems.
