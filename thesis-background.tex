@@ -37,7 +37,7 @@ In particular, for the 3D environment, we have that $\Xv = \Rb^3$ with $d = \|\c
     \centering
     \includegraphics[width=0.5\linewidth]{figs/2d-sdf.png}
     \caption{An illustration of Signed Distance Function for a 2D metric space discretized into pixels (query coordinates '+') (Courtesy: Wikipedia)}%
-    \label{fig:figs/2d-sdf}
+    \label{fig:2d-sdf}
 \end{figure}
 
 \subsubsection{TSDF integration}
@@ -61,7 +61,7 @@ where $\dot{q} = \begin{bmatrix}
     \centering
     \includegraphics[width=0.6\linewidth]{figs/tsdf-single-image.png}
     \caption{Back-projection of associated pixels into the 3D volumetric grid to obtain a noisy surface}%
-    \label{fig:figs/tsdf-single-image}
+    \label{fig:tsdf-single-image}
 \end{figure}
 
 \todo{Edit above figure to illustrate SDF calculation for a single query point} Where $\| \tv_C^W - q \|_2$ is the distance between the query point and the camera center along the camera optical axis, and $\lambda = K^{-1} p$ defines the ray direction for the pixel $p$. This effectively calculates the shortest distance of the query coordinate to the surface.
@@ -173,7 +173,7 @@ Consider a single non-linear measurement $h_i( \cdot )$, then by taylor's expans
 \begin{align}
     h_i(\Xv_i) \approx h_i(\Xv_i^{(0)}) + \frac{\partial h_i}{\partial \Xv_i} \Bigg |_{\Xv_i^{(0)}} (\Xv_i - \Xv_i^{(0)})
 \end{align}
-If we define the jacobian as $\Jv_i \triangleq \frac{\partial h_i}{\partial \Xv_i} \left|_{\Xv_i^{(0)}}$, and $\Delta_i \triangleq (\Xv_i - \Xv_i^{(0)})$ and substitute in the general non-linear least squares objective \ref{eq:least-squares}:
+If we define the jacobian as $\Jv_i \triangleq \frac{\partial h_i}{\partial \Xv_i} \Big|_{\Xv_i^{(0)}}$, and $\Delta_i \triangleq (\Xv_i - \Xv_i^{(0)})$ and substitute in the general non-linear least squares objective \ref{eq:least-squares}:
 
 \begin{figure}[htpb]
     \centering

@@ -7,7 +7,7 @@ In this chapter we demonstrate performance and comparable results of the propose
 
 To support relatively high frame rate operation in the presence of slow/non-realtime deep learning components our pipeline is highly parallelized. Our system adopts the \textit{Actor} framework, where each component runs asynchronously, and communicates via thread-safe queues.
 
-We implement the semantic segmentation pipeline as a separate python process which serializes the outputs using \texttt{protobuf} and communicates with the client thread via \texttt{zeromq} sockets in the Object SLAM pipeline. Since, instance segmentation is carried out only for keyframes, the asynchronous python process exits early (typically) freeing GPU memory, that can be used for large reconstructions.
+We implement the semantic segmentation pipeline as a separate python process which serializes the outputs using \texttt{protobuf} and communicates with the client thread via \texttt{zeromq} sockets in the Object SLAM pipeline. Since, instance segmentation is carried out only for keyframes, the asynchronous python process exits early (typically) freeing GPU memory, which can be used for large reconstructions.
 
 I implement the GPU code in CUDA, and leverage the Open3D GPU framework~\cite{dongGPUAcceleratedRobust2019}. In particular, we build on the (in-house) spatially hashed TSDF implementation, implement an additional frame-to-model tracking module, and also build a back-end module for pose graph optimization. We use the optimized spherical ray-casting method to improve performance.
 
@@ -17,7 +17,7 @@ Our experiments were run on a Linux system (Ubuntu 18.04) with Intel i7-6700 CPU
 
 We first demonstrate qualitative reconstruction results on the RGBD scenes V2 dataset.  Fig.~\ref{fig:rgbd_scene13} shows the object mesh extracted from our scalable volumes with a foreground count threshold. We can see that small objects are clearly reconstructed with details, and the background is correctly filtered.
 
-At a larger scale, Fig.~\ref{fig:objectsandscene} segments teddy bear and computers from the cluttered scene and ensures a low-drift of the trajectory. Fig.~\ref{fig:rgbd_scene12} compares reconstructions from \textit{MaskFusion} \cite{runz_maskfusion_2018} and our system for a given sequence. It can be seen that the object-level reconstruction -- specifically for the cap and sofa -- is much cleaner in our system than in \textit{MaskFusion}.
+At a larger scale, Fig.~\ref{fig:objectsandscene} segments teddy bear and computers from the cluttered scene and ensures a low-drift of the trajectory. Fig.~\ref{fig:rgbd_scene12} compares reconstructions from \textit{MaskFusion} \cite{runzMaskFusionRealTimeRecognition2018} and our system for a given sequence. It can be seen that the object-level reconstruction -- specifically for the cap and sofa -- is much cleaner in our system than in \textit{MaskFusion}.
 
 \begin{figure}[t!]
     \centering
@@ -28,16 +28,16 @@ At a larger scale, Fig.~\ref{fig:objectsandscene} segments teddy bear and comput
     \label{fig:rgbd_scene13}
 \end{figure}
 
-\begin{figure*}[t!]
+\begin{figure}[t!]
     \centering
-    \subfloat{\includegraphics[align=c,width=0.49\linewidth]{figs/frame-000293.color.png}}
-    \subfloat{\includegraphics[align=c,width=0.49\linewidth]{figs/mask-fusion-scene12.png}}\\
-    \subfloat{\includegraphics[align=c,width=0.5\linewidth]{figs/scene12.png}}
+    \subfloat{\includegraphics[width=0.49\linewidth]{figs/frame-000293.color.png}}
+    \subfloat{\includegraphics[width=0.49\linewidth]{figs/mask-fusion-scene12.png}}\\
+    \subfloat{\includegraphics[width=0.55\linewidth]{figs/scene12.png}}
     \vspace{-2mm}
     \caption{Reconstructed small indoor scene \emph{RGB-D Scene 12}. We first show an example input \textit{RGB} frame followed by a top-down view of the reconstruction from \textit{MaskFusion}. This is followed by result from our pipeline. Note that in our reconstruction background walls and floor are filtered out. }
     \vspace*{-1em}
     \label{fig:rgbd_scene12}
-\end{figure*}
+\end{figure}
 
 
 \section{Quantitative results}
@@ -79,9 +79,7 @@ fr3\_long\_office & 2.23 & 3.54 & 140.8 & 10.8 & \textbf{9.68}\\
 \label{tab:ATE_RMSE}
 \end{table*}
 
-In general, we achieve comparable results against the state-of-the-art surfel based online SLAM system \textit{ElasticFusion}~\cite{\whelanElasticFusionDenseSLAM2015} and volumetric offline reconstruction system \textit{Open3D}~\cite{zhouOpen3DModernLibrary2018}. In the meantime, our method outperforms object-based SLAM systems \textit{MaskFusion}~\cite{runzMaskFusionRealTimeRecognition2018}
-t
-and \textit{Fusion++}~\cite{mccormacFusionVolumetricObjectLevel2018} by a large margin. This improvement can be attributed to the use of semantic data association and scalable voxel grids. It must be noted that \textit{MaskFusion} requires 2 high end graphics cards to run it in online mode, therefore we ran it in offline mode, and stored all the detected object instances instead of manually selecting objects of interest for a fair comparison with our method. Additionally, we note that since Fusion++ is not open source, we obtain the results from the corresponding paper.
+In general, we achieve comparable results against the state-of-the-art surfel based online SLAM system \textit{ElasticFusion}~\cite{whelanElasticFusionDenseSLAM2015} and volumetric offline reconstruction system \textit{Open3D}~\cite{zhouOpen3DModernLibrary2018}. In the meantime, our method outperforms object-based SLAM systems \textit{MaskFusion}~\cite{runzMaskFusionRealTimeRecognition2018} and \textit{Fusion++}~\cite{mccormacFusionVolumetricObjectLevel2018} by a large margin. This improvement can be attributed to the use of semantic data association and scalable voxel grids. It must be noted that \textit{MaskFusion} requires 2 high end graphics cards to run it in online mode, therefore we ran it in offline mode, and stored all the detected object instances instead of manually selecting objects of interest for a fair comparison with our method. Additionally, we note that since Fusion++ is not open source, we obtain the results from the corresponding paper.
 
 \begin{figure}[t!]
     \centering
@@ -107,7 +105,7 @@ For larger scenes, although noisy semantic segmentations affect masks and introd
 \end{figure}
 \section{Runtime analysis}
 
-For runtime evaluation of our system we limit the number of initialized objects in the scene to 10 to ensure (close to) online performance on the aforementioned scenes. Processing each frame in the absence of any objects i.e., only background tracking takes about 200ms per frame. The largest computational bottleneck and time consuming operation is the rendering step, and while there are multiple rendering operations required (for instance, during object association), we render the objects and background only once per frame, and reuse the renders. We observe that each object takes on average about 45ms to render. In the presence of about 5-8 objects in the scene, the time taken per frame increases to about 450ms (200ms for background + 250ms for object renders) per frame. In comparison, we observed in our tests that \textit{MaskFusion} runs at lower than 1FPS with one graphics card and suffers from random crashes in online mode. \textit{Fusion++} reports its results with pre-computed segmentation masks. Our method runs seamlessly on a single GPU. A detailed runtime analysis is given in Table~\ref{tab:runtime}.
+For runtime evaluation of our system we limit the number of initialized objects in the scene to 10 to ensure -- close to -- online performance on the aforementioned scenes. Processing each frame in the absence of any objects i.e., only background tracking takes about 200ms per frame. The largest computational bottleneck and time consuming operation is the rendering step, and while there are multiple rendering operations required (for instance, during object association), we render the objects and background only once per frame, and reuse the renders. We observe that each object takes on average about 45ms to render. In the presence of about 5-8 objects in the scene, the time taken per frame increases to about 450ms (200ms for background + 250ms for object renders) per frame. In comparison, we observed in our tests that \textit{MaskFusion} runs at lower than 1FPS with one graphics card and suffers from random crashes in online mode. \textit{Fusion++} reports its results with pre-computed segmentation masks. Our method runs seamlessly on a single GPU. A detailed runtime analysis is given in Table~\ref{tab:runtime}.
 
 \begin{table}[ht]
     \centering
