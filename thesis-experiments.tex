@@ -7,13 +7,13 @@ In this chapter we demonstrate performance and comparable results of the propose
 
 To support relatively high frame rate operation in the presence of slow/non-realtime deep learning components our pipeline is highly parallelized. Our system adopts the \textit{Actor} framework, where each component runs asynchronously, and communicates via thread-safe queues.
 
-We implement the semantic segmentation pipeline as a separate python process which serializes the outputs using \texttt{protobuf} and communicates with the client thread via \texttt{zeromq} sockets in the Object SLAM pipeline. Since, instance segmentation is carried out only for keyframes, the asynchronous python process exits early (typically) freeing GPU memory, which can be used for large reconstructions.
+We implement the semantic segmentation pipeline as a separate python process which serializes the outputs using \texttt{protobuf} and communicates with the client thread via \texttt{zeromq} sockets in the Object SLAM pipeline. Since instance segmentation is carried out only for keyframes, the asynchronous python process exits early (typically) freeing GPU memory, which can be used for large reconstructions.
 
 I implement the GPU code in CUDA, and leverage the Open3D GPU framework~\cite{dongGPUAcceleratedRobust2019}. In particular, we build on the (in-house) spatially hashed TSDF implementation, implement an additional frame-to-model tracking module, and also build a back-end module for pose graph optimization. We use the optimized spherical ray-casting method to improve performance.
 
 Our experiments were run on a Linux system (Ubuntu 18.04) with Intel i7-6700 CPU at 4.00 GHz and 32GB of RAM and a NVIDIA GTX1080 with 8GB of GPU memory.
 
-\section{Qualitative results}
+\section{Qualitative Results}
 
 We first demonstrate qualitative reconstruction results on the RGBD scenes V2 dataset.  Fig.~\ref{fig:rgbd_scene13} shows the object mesh extracted from our scalable volumes with a foreground count threshold. We can see that small objects are clearly reconstructed with details, and the background is correctly filtered.
 
@@ -23,7 +23,7 @@ At a larger scale, Fig.~\ref{fig:objectsandscene} segments teddy bear and comput
     \centering
     \subfloat{\includegraphics[width=0.5\linewidth]{figs/frame-000218.color.png}}
     \subfloat{\includegraphics[width=0.5\linewidth]{figs/scene13-objectsonly.png}}
-    \caption{Qualitative foreground object reconstruction results on \emph{RGB-D Scene 13} sequence.}
+    \caption{Qualitative foreground object reconstruction results on \emph{RGBD Scene 13} sequence.}
     \vspace*{-1em}
     \label{fig:rgbd_scene13}
 \end{figure}
@@ -34,19 +34,19 @@ At a larger scale, Fig.~\ref{fig:objectsandscene} segments teddy bear and comput
     \subfloat{\includegraphics[width=0.49\linewidth]{figs/mask-fusion-scene12.png}}\\
     \subfloat{\includegraphics[width=0.55\linewidth]{figs/scene12.png}}
     \vspace{-2mm}
-    \caption{Reconstructed small indoor scene \emph{RGB-D Scene 12}. We first show an example input \textit{RGB} frame followed by a top-down view of the reconstruction from \textit{MaskFusion}. This is followed by result from our pipeline. Note that in our reconstruction background walls and floor are filtered out. }
+    \caption{Reconstructed small indoor scene \emph{RGBD Scene 12}. We first show an example input \textit{RGB} frame (top-left) followed by a top-down view of the reconstruction from \textit{MaskFusion} (top right). This is followed by result from our pipeline (bottom). Note that in our reconstruction background walls and floor are filtered out. }
     \vspace*{-1em}
     \label{fig:rgbd_scene12}
 \end{figure}
 
 
-\section{Quantitative results}
+\section{Quantitative Results}
 
 Table \ref{tab:ATE_RMSE} presents Absolute Trajectory Error (ATE) of four different methods compared with our system. Note in the table, that we \textit{bold} the best results of the object-based systems. We also provide results from geometric SLAM systems for comparison to present that our trajectory error is comparable to state of the art systems.
 
 \begin{table*}[htbp]
 \centering
-\caption{Trajectory accuracy comparison on real world datasets (Absolute Trajectory Error in centimeters)}
+\caption{Trajectory accuracy comparison on real world datasets (Absolute Trajectory Error in centimeters).}
 \begin{tabular}{ |p{3cm}||p{2.2cm}|p{1.5cm}||p{2.2cm}| p{1.6cm} | p{1.5cm}|  }
  \hline
  Dataset & ElasticFusion & Open3D & MaskFusion & Fusion++ & Ours \\
@@ -90,7 +90,7 @@ In general, we achieve comparable results against the state-of-the-art surfel ba
     \label{fig:rgbd_scenes-ape}
 \end{figure}
 
-For small scenes in the \textit{RGB-D scenes V2 dataset}, we achieve consistently high accuracy with ATE below $5cm$ for all scenes. Figure~\ref{fig:rgbd_scenes-ape} shows detailed trajectory visualizations.
+For small scenes in the \textit{RGBD scenes V2 dataset}, we achieve consistently high accuracy with ATE below $5cm$ for all scenes. Figure~\ref{fig:rgbd_scenes-ape} shows detailed trajectory visualizations.
 
 For larger scenes, although noisy semantic segmentations affect masks and introduce noise for frame-to-model odometry, compositional rendering still ensures reliable tracking. Trajectory comparisons are provided in Figure~\ref{fig:fr3_household-ape}.
 
@@ -103,7 +103,7 @@ For larger scenes, although noisy semantic segmentations affect masks and introd
     \vspace*{-1em}
     \label{fig:fr3_household-ape}
 \end{figure}
-\section{Runtime analysis}
+\section{Runtime Analysis}
 
 For runtime evaluation of our system we limit the number of initialized objects in the scene to 10 to ensure -- close to -- online performance on the aforementioned scenes. Processing each frame in the absence of any objects i.e., only background tracking takes about 200ms per frame. The largest computational bottleneck and time consuming operation is the rendering step, and while there are multiple rendering operations required (for instance, during object association), we render the objects and background only once per frame, and reuse the renders. We observe that each object takes on average about 45ms to render. In the presence of about 5-8 objects in the scene, the time taken per frame increases to about 450ms (200ms for background + 250ms for object renders) per frame. In comparison, we observed in our tests that \textit{MaskFusion} runs at lower than 1FPS with one graphics card and suffers from random crashes in online mode. \textit{Fusion++} reports its results with pre-computed segmentation masks. Our method runs seamlessly on a single GPU. A detailed runtime analysis is given in Table~\ref{tab:runtime}.
 

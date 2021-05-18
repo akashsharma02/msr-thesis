@@ -35,7 +35,7 @@ For autonomous robots in the near future, to work in the real world advanced int
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=0.8\linewidth]{figs/Spots-Got-an-Arm.png}
-    \caption{Boston Dynamics' Spot Mini robot picking up clothes in a living room. These types of complex interactions require the robot to have a semantic understanding of the objects in its environment}%
+    \caption{Boston Dynamics' Spot Mini robot picking up clothes in a living room. These types of complex interactions require the robot to have a semantic understanding of the objects in its environment.}%
     \label{fig:spot-mini}
 \end{figure}
 
@@ -52,7 +52,7 @@ On the other hand, with progress in deep learning, near real-time semantic perce
     \label{fig:objectsandscene}
 \end{figure}
 
-In this thesis, I present a Compositional and Scalable Object SLAM system that represents an environment as a posegraph of persistent objects. I describe a system, that incrementally improves each associated persistent object landmarks through RGB-D Fusion, and optimizes the landmarks and the robot trajectory simultaneously to accurately represent an environment. (see Figure~\ref{fig:objectsandscene}).
+In this thesis, I present a Compositional and Scalable Object SLAM system that represents an environment as a pose graph of persistent objects. I describe a system, that incrementally improves each associated persistent object landmark through a RGBD Fusion approach, and optimizes the landmarks and the robot trajectory simultaneously to accurately represent an environment. (see Figure~\ref{fig:objectsandscene}).
 
 In implementation, this work fully exploits the power of the modern GPU-based reconstruction pipeline~\cite{dongGPUAcceleratedRobust2019} and object detection frameworks~\cite{kirillovPointRendImageSegmentation2020}, to design an efficient architecture for data exchange without sacrificing the ease of system configuration and build.
 
@@ -60,7 +60,7 @@ In implementation, this work fully exploits the power of the modern GPU-based re
 This document presents the following core contributions:
 
 \begin{enumerate}
-    \item A compositional volumetric rendering method that selects objects of interest and reduces memory footprint;
+    \item A compositional volumetric rendering method that feeds the most up-to-date model render for RGBD camera tracking;
     \item A hybrid object association method that combines geometric and semantic cues to enable drift-free tracking without an explicit relocalization module;
     \item A scalable, modular, and easy-to-use open source system that runs nearly realtime.
 \end{enumerate}

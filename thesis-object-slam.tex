@@ -18,15 +18,15 @@ Direct SLAM~\cite{engelLSDSLAMLargeScaleDirect, engelDirectSparseOdometry2018} o
 Our approach can be regarded as a bridge between the two approaches. We replace point landmarks with objects in feature-based SLAM. As a result, since pose constraints attached to objects can naturally replace reprojection error, we may directly convert such a landmark-pose constraint optimization to pose graph optimization (PGO).
 
 \subsubsection{Map representation}
-For \textit{dense} scene reconstruction, the volumetric Truncated Signed Distance Function (TSDF)~\cite{curlessVolumetricMethodBuilding1996} as introduced in Chapter \ref{chap:background} representation has been adopted and improved in several \textit{direct SLAM} frameworks. KinectFusion~\cite{newcombeKinectFusionRealtimeDense2011} introduced a plain $512^3$ grid for small scenes and objects. VoxelHashing~\cite{niessnerRealtime3DReconstruction2013} designed spatial hashing to scale this data structure to larger scenes. Similar implementations are available in CPU/GPU in the modern Open3D framework~\cite{zhouOpen3DModernLibrary2018, dongGPUAcceleratedRobust2019}, and we adopt this representation due to its ease of use.
+For \textit{dense} scene reconstruction, as introduced in Chapter \ref{chap:background} the volumetric Truncated Signed Distance Function (TSDF)~\cite{curlessVolumetricMethodBuilding1996} representation has been adopted and improved in several \textit{direct SLAM} frameworks. KinectFusion~\cite{newcombeKinectFusionRealtimeDense2011} introduced a plain $512^3$ grid for small scenes and objects. VoxelHashing~\cite{niessnerRealtime3DReconstruction2013} designed spatial hashing to scale this data structure to larger scenes. Similar implementations are available in CPU/GPU in the modern Open3D framework~\cite{zhouOpen3DModernLibrary2018, dongGPUAcceleratedRobust2019}, and we adopt this representation due to its ease of use.
 
-\subsection{Object instance segmentation and object-based SLAM}
+\subsection{Object Instance Segmentation and Object based SLAM}
 \subsubsection{Object instance segmentation}
 In recent years, \textit{Region proposal} based Convolutional Neural Networks (R-CNN) \cite{renFasterRCNNRealTime2016} have established themselves as de-facto standards for object \textit{instance segmentation} from images. Amongst the literature, \textit{Mask-RCNN}~\cite{heMaskRCNN2018} and \textit{PointRend}~\cite{kirillovPointRendImageSegmentation2020} are the best off-the-shelf solutions.
 In this work, we use \textit{PointRend} \cite{kirillovPointRendImageSegmentation2020}, which shows significant improvement over \cite{heMaskRCNN2018} by reformulating the mask generation as a rendering problem. In essence, this formulation is consistent with our tracking via compositional rendering module.
 
-\subsubsection{Object-based SLAM}
-Applying aforementioned DNNs on 2D images, several works for RGB-D and monocular SLAM have attempted to incorporate object instance detection. CubeSLAM~\cite{yangMonocularObjectPlane2019} and QuadricSLAM~\cite{nicholsonQuadricSLAMDualQuadrics2019} fit cuboids and quadrics, respectively, to detected objects to generate parameterized object landmarks. While improving the localization accuracy compared to baselines, these methods fail to densely map objects. \textit{MaskFusion}~\cite{runzMaskFusionRealTimeRecognition2018} adds labels to oriented point clouds and supports dense object visualization, but does not maintain persistent objects globally in a graph. \textit{Fusion++}~\cite{mccormacFusionVolumetricObjectLevel2018}, on the other hand, supports persistent dense reconstruction from fixed size $64^3$ voxel grids, yet is sensitive to voxel size tuning and may fail to adapt to objects at varying scales.
+\subsubsection{Object based SLAM}
+Applying aforementioned DNNs on 2D images, several works for RGBD and monocular SLAM have attempted to incorporate object instance detection. CubeSLAM~\cite{yangMonocularObjectPlane2019} and QuadricSLAM~\cite{nicholsonQuadricSLAMDualQuadrics2019} fit cuboids and quadrics, respectively, to detected objects to generate parameterized object landmarks. While improving the localization accuracy compared to baselines, these methods fail to densely map objects. \textit{MaskFusion}~\cite{runzMaskFusionRealTimeRecognition2018} adds labels to oriented point clouds and supports dense object visualization, but does not maintain persistent objects globally in a graph. \textit{Fusion++}~\cite{mccormacFusionVolumetricObjectLevel2018}, on the other hand, supports persistent dense reconstruction from fixed size $64^3$ voxel grids, yet is sensitive to voxel size tuning and may fail to adapt to objects at varying scales.
 Our system utilizes scalable voxel grids that do not require much tuning to adjust to object scales. With a seamless CPU to GPU memory transfer implementation, larger environments can also be handled on-the-go.
 
 % In this paper, we demonstrate an object graph formulation for simultaneous dense object reconstruction and accurate camera tracking, leveraging significant improvements in Deep Learning towards Object Detection and Object instance segmentation.
@@ -38,15 +38,15 @@ Our system utilizes scalable voxel grids that do not require much tuning to adju
 
 % For directly segmenting \textit{3D data}, sparse convolution~\cite{4Dspatiotempro} and Key point convolution~\cite{kpconv} has started to gain attention in the community for its success on non-uniform point cloud data.
 
-%In our work, we choose object detectors for images rather than point cloud, since we take RGB-D data as raw input, and data association for objects from 2D is easier to obtain and update given depth maps and poses.
+%In our work, we choose object detectors for images rather than point cloud, since we take RGBD data as raw input, and data association for objects from 2D is easier to obtain and update given depth maps and poses.
 
 %\subsection{Object-based SLAM}
 %\textbf{Sparse Feature based methods}. These approaches use object detection as opposed to object instance mask segmentation, to instantiate oriented 3D objects and fit cuboids \cite{yang2019cubeslam} or Quadrics \cite{quadric_slam}. They handle data association either by grouping detected keypoints into semantic labels, or assume known associations and define an Intersection-over-Union (IoU) overlap based error for optimization respectively. Although, these methods show improvement over baselines, they do not focus on object reconstruction fidelity. In contrast, our work uses a dense Hash-table based scalable volume data structure, which allows for accurate object reconstructions.
 
 % \textbf{Direct dense methods}. SLAM++ %\cite{salas-moreno_slam_2013} was an early attempt towards SLAM with 3D object landmarks, that used a dense object representation. This method employed a dictionary of object descriptors generated through only geometric cues of each object model for data-association, and attempted camera trajectory optimization through multiple Frame to model ICP refinement between the live frame and \textit{each} detected object model. Further, a major limitation was that, it required pre-processed high quality mesh models of the expected objects in the scene prior to operation.
 
-% The problem of high-fidelity 3D reconstruction has received substantial attention over the years. Key to high-quality 3D reconstruction is the choice of underlying representation for fusing sensor measurements of different modalities. Thus, most of the research on achieving globally consistent 3D models at scale uses the RGB-D input that encapsulates the semantic as well as geometric (depth) information simultaneously. ~\citet{choi2015robust} proposes a framework that uses RGB-D input to generate a very high-fidelity reconstruction of indoor scenes. They provide globally consistent models by optimizing across the entire pose trajectory. However, their approach requires offline processing and access to all the input frames resulting in hours of processing time, meaning real-time viability of refinement of reconstructed areas is almost impossible. Such joint global registration of multiple partially overlapping surfaces has also been considered by other works~\cite{huber2003fully,theiler2015globally}. To bridge this gap, this work proposes an object-centric pipeline for data association that reduce the expensive computational cost in registration.
-% ~\citet{kinectfusion}'s seminal work KinectFusion introduced a new method and made RGBD reconstructions feasible. The key insight was to incorporate frame-to-model tracking as opposed to frame-to-frame tracking, which improved reconstruction accuracy significantly. Although it achieves impressive results, this approach still accumulates drift in the map estimate over long trajectories, since it does not retrospectively correct erroneous tracking. \citet{salas-moreno_slam_2013} extended KinectFusion and introduced an efficient pose graph formulation, that could be continually refined. However, this system required a detailed geometric model of the object a-priori. Further, ~\citet{fusionPP} propose an online object-level SLAM system wherein the 6DoF pose graph consists of only the reconstructed object instances. Using RGB-D data of indoor scenes as their input, they leverage Mask-RCNN~\cite{Detectron2018} to generate 2D instance mask predictions of those objects. Consequently, these mask predictions are fused online into the per-object Truncated Signed Distance Function (TSDF) along with a 3D voxel mask to fuse the instance foreground. Although they demonstrate high quality object reconstruction within globally consistent loop-closed object SLAM maps, the memory usage scales cubically with the size of a TSDF. To combat the memory overflow, they propose integrating octree or voxel hashing into their pipeline to further boost run-time performance. Moreover, the system proposed by them is still susceptible to spurious detections resulting in a growing clutter of partial object reconstructions. As an improvement to this problem, they propose a learning-based mechanism for filtering and reconstructing objects.
+% The problem of high-fidelity 3D reconstruction has received substantial attention over the years. Key to high-quality 3D reconstruction is the choice of underlying representation for fusing sensor measurements of different modalities. Thus, most of the research on achieving globally consistent 3D models at scale uses the RGBD input that encapsulates the semantic as well as geometric (depth) information simultaneously. ~\citet{choi2015robust} proposes a framework that uses RGBD input to generate a very high-fidelity reconstruction of indoor scenes. They provide globally consistent models by optimizing across the entire pose trajectory. However, their approach requires offline processing and access to all the input frames resulting in hours of processing time, meaning real-time viability of refinement of reconstructed areas is almost impossible. Such joint global registration of multiple partially overlapping surfaces has also been considered by other works~\cite{huber2003fully,theiler2015globally}. To bridge this gap, this work proposes an object-centric pipeline for data association that reduce the expensive computational cost in registration.
+% ~\citet{kinectfusion}'s seminal work KinectFusion introduced a new method and made RGBD reconstructions feasible. The key insight was to incorporate frame-to-model tracking as opposed to frame-to-frame tracking, which improved reconstruction accuracy significantly. Although it achieves impressive results, this approach still accumulates drift in the map estimate over long trajectories, since it does not retrospectively correct erroneous tracking. \citet{salas-moreno_slam_2013} extended KinectFusion and introduced an efficient pose graph formulation, that could be continually refined. However, this system required a detailed geometric model of the object a-priori. Further, ~\citet{fusionPP} propose an online object-level SLAM system wherein the 6DoF pose graph consists of only the reconstructed object instances. Using RGBD data of indoor scenes as their input, they leverage Mask-RCNN~\cite{Detectron2018} to generate 2D instance mask predictions of those objects. Consequently, these mask predictions are fused online into the per-object Truncated Signed Distance Function (TSDF) along with a 3D voxel mask to fuse the instance foreground. Although they demonstrate high quality object reconstruction within globally consistent loop-closed object SLAM maps, the memory usage scales cubically with the size of a TSDF. To combat the memory overflow, they propose integrating octree or voxel hashing into their pipeline to further boost run-time performance. Moreover, the system proposed by them is still susceptible to spurious detections resulting in a growing clutter of partial object reconstructions. As an improvement to this problem, they propose a learning-based mechanism for filtering and reconstructing objects.
 
 \section{Compositional and Scalable Object SLAM} \label{sec: methodology}
 
@@ -54,7 +54,7 @@ Our system utilizes scalable voxel grids that do not require much tuning to adju
 Our pipeline can be divided into typical SLAM components and a deep perception module, connected by an object-based semantic map. Figure~\ref{fig:overview} provides an overview.
 
 %
-It consists of 5 modules each running in a separate thread: semantic segmentation, frame-to-model odometry, object data association and map update, PGO, and compositional rendering.
+Our pipeline consists of 5 modules each running in a separate thread: semantic segmentation, frame-to-model odometry, object data association and map update, PGO, and compositional rendering.
 %
 Incoming RGBD frames are initially processed through  \textit{semantic segmentation} (\S\ref{subsec: segmentation})  to obtain instance masks, labels, and semantic descriptors, from DNNs for keyframes.
 %
@@ -69,7 +69,7 @@ Before we discuss these modules in detail from \S\ref{subsec: tracking} to \S\re
  \begin{figure}[htbp]
  	\centering
     \includegraphics[width=\linewidth]{figs/icra2021-compressed.pdf}
-    \caption{\label{fig:overview} System overview: Top shows the deep object segmentation pipeline that runs asynchronously, Masked keyframes from the segmentation pipeline are used in Data association and map update (shown with red lines). Bottom shows the major stages of the reconstruction system, specifically object models are used in tracking via compositional raycasting (shown with green lines).}
+    \caption{\label{fig:overview} System overview: Top shows the deep object segmentation pipeline that runs asynchronously, Masked keyframes from the segmentation pipeline are used in Data association and Map update (shown with red lines). Bottom shows the major stages of the reconstruction system, specifically object models are used in tracking via compositional raycasting (shown with green lines).}
  \end{figure}
 \subsection{Core concepts and notations} \label{subsec: notation}
 A background volume $V_B$ is a spatially-hashed voxel grid on GPU, where small $16^3$ subvolumes are allocated around observed 3D points. It is created and updated as a \textit{temporary} instance for stable tracking. An object volume $V_{O_i}$ is akin to the background volume, but persistently maintains the object label, ID, and corresponding object descriptors.
@@ -79,9 +79,9 @@ A 3D volume $V$'s properties, including surface vertex positions, normals, and c
 We use subscripts and superscripts to indicate multiple coordinate frames used in our pipeline, including $C_i$ for $i$th camera, $O_j$ for $j$th object, and $W$ for background or world coordinate frame. For instance \(\langle \mathcal{N}_{C_s}, \mathcal{V}_{C_s}, \mathcal{C}_{C_s} \rangle \) represents 2D maps rendered from the volumes in the $C_s$ camera coordinate frame.
 $\mathbf{T}_{O_j}^W \in SE(3)$ encodes a rigid transformation from object $j$ to world. Finally, we denote the respective measurements between nodes with variable $\mathbf{Z}$.
 
-\subsection{Hybrid frame-to-model odometry} \label{subsec: tracking}
+\subsection{Hybrid Frame to Model Odometry} \label{subsec: tracking}
 
-In \textit{RGB-D} camera tracking, we seek to estimate the relative camera pose \(\mathbf{T}^{C_t}_{C_s}\) given an incoming \textit{RGB-D} target frame \( \langle \mathcal{I}_{C_t}, \mathcal{D}_{C_t}\rangle \) and a source model \( \langle \mathcal{N}_{C_{s}}, \mathcal{V}_{C_{s}}, \mathcal{C}_{C_{s}}\rangle \) of the scene rendered by placing a virtual camera at the previous camera frame ${C_s}$.
+In RGBD camera tracking, we seek to estimate the relative camera pose \(\mathbf{T}^{C_t}_{C_s}\) given an incoming RGBD target frame \( \langle \mathcal{I}_{C_t}, \mathcal{D}_{C_t}\rangle \) and a source model \( \langle \mathcal{N}_{C_{s}}, \mathcal{V}_{C_{s}}, \mathcal{C}_{C_{s}}\rangle \) of the scene rendered by placing a virtual camera at the previous camera frame ${C_s}$.
 
 We accomplish this by minimizing the joint weighted dense geometric error residual $r_D$ and the photometric error residual $r_I$. The general energy function is formulated as in \cite{parkColoredPointCloud2017} by accumulating residual at every point $p \in \mathbb{Z}^2$ with a valid data association:
 \begin{align}
@@ -104,7 +104,7 @@ It must be noted that the points $p$ are a subset of pixels with valid object-le
 
 The energy function in equation \ref{eq:1} is minimized using the Gauss-Newton algorithm. We implement the minimization in a coarse to fine scheme using an image pyramid, on the GPU in parallel since each pixel acts independently in the energy function using \textit{reduction} with appropriate thread conflict handling as described in \cite{dongGPUAcceleratedRobust2019}.
 
-\subsection{Object instance segmentation and association} \label{subsec: segmentation}
+\subsection{Object Instance Segmentation and Association} \label{subsec: segmentation}
 
 \textbf{2D instance segmentation:} Object detection and instance masks are generated every $n^{th}$ frame (we choose $n=10$) in a separate thread from the \textit{PointRend} backend. \textit{PointRend} uses a Resnet-50-FPN backbone network to generate a convolutional feature map. In particular, after an empirical evaluation, we found that \textit{PointRend} provided better masks over \textit{Mask-RCNN}.
 
@@ -146,7 +146,7 @@ For subsequent fusion of a 2D instance detection to its associated 3D object, th
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=0.8\linewidth]{figs/object-integration.png}
-    \caption{Each pixel is a binomial trial given a latent foreground probability of the associated voxel. By maintaining foreground and background counts, we estimate the expected latent probability required during rendering}%
+    \caption{Each pixel is a binomial trial given a latent foreground probability of the associated voxel. By maintaining foreground and background counts, we estimate the expected latent probability required during rendering.}%
     \label{fig:object-integration}
 \end{figure}
 
@@ -158,7 +158,7 @@ Finally, we update the object feature map by a gated weight average:
 where $\mathcal{H}$ is the Heaviside step function that hard-filters outlier input feature map $f_{in}$ compared to the maintained object feature map $f_{t-1}$ with weight $w_{t-1}$ controlled by the threshold $\lambda$.
 
 
-\subsection{Factor graph optimization} \label{subsec: optimization}
+\subsection{Factor Graph Optimization} \label{subsec: optimization}
 
 As we have mentioned before, a background volume is maintained for stable tracking and to handle \textit{objectless} frames. The background volume additionally maintains the ratio ($r$) of visible volume units in the current camera frustum to the total number of allocated volume units in the volume. A low ratio implies that the camera may have moved away from a particular part of the scene. Pose graph optimization is conditionally triggered when the background volume is reset owing to low ratio of visible units ($r < 0.2$) and when there are new objects added into the graph.
 
@@ -176,13 +176,13 @@ where the operator $ \mathcal{Y} \ominus \mathcal{X} = \text{Log}(\mathcal{X}^{-
 
 We solve the optimization in GTSAM \cite{FactorGraphsGTSAM2019} using Levenberg Marquardt. Since the entire object volume is transformed as a rigid body, the object volumes remain unchanged in memory after optimization. We note that this circumvents the time-consuming re-integration that usually takes place in volumetric methods after PGO \cite{whelanElasticFusionDenseSLAM2015}.
 
-\subsection{Compositional rendering} \label{subsec: rendering}
+\subsection{Compositional Rendering} \label{subsec: rendering}
 Compositional rendering is a serialized operation that generates normal, vertex, and color maps by ray-casting 3D objects in the viewing frustum into 2D object instances, and is illustrated in Figure~\ref{fig:comp-render}.
 
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=0.8\linewidth]{figs/comp-render.png}
-    \caption{An illustration of compositional rendering}%
+    \caption{An illustration of compositional rendering.}%
     \label{fig:comp-render}
 \end{figure}
 
